@@ -10,6 +10,7 @@ import org.newdawn.slick.state.StateBasedGame;
 
 import entities.world.Territory;
 import entities.world.World;
+import gui.Hud;
 
 public class WorldState extends BasicGameState {
 
@@ -18,7 +19,7 @@ public class WorldState extends BasicGameState {
 
 	private World world;
 	private int xOffset, yOffset;
-
+	private Hud hud;
 
 
 	public WorldState(int id){
@@ -29,6 +30,8 @@ public class WorldState extends BasicGameState {
 	public void init(GameContainer container, StateBasedGame game)
 			throws SlickException {
 		world = World.generateWorld();
+		hud = new Hud();
+		hud.getMiniMap().setTerritories(world.getTerritories());
 	}
 
 	@Override
@@ -36,6 +39,8 @@ public class WorldState extends BasicGameState {
 			Graphics g) throws SlickException {
 		g.setBackground(Color.black);
 		world.render(g, xOffset, yOffset);
+		hud.render(g);
+		hud.getMiniMap().render(g, xOffset, yOffset);
 	}
 
 	@Override

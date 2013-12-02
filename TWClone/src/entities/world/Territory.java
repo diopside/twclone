@@ -64,6 +64,9 @@ public class Territory {
 	}
 	
 	
+	public int getType(){
+		return type;
+	}
 	
 
 }
