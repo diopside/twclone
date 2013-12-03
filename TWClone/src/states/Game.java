@@ -36,7 +36,7 @@ public class Game extends StateBasedGame{
 	public static void main(String[] args){
 		try {
 			AppGameContainer app = new AppGameContainer(new Game("TWClone"), WIDTH, HEIGHT, false);
-			//app.setTargetFrameRate(200);
+			app.setTargetFrameRate(200);
 			app.start();
 		} catch (SlickException exception) {
 			exception.printStackTrace();

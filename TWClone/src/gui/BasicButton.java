@@ -28,6 +28,11 @@ public class BasicButton extends Button {
 		Rectangle r = new Rectangle(this.x, this.y, image.getWidth(), image.getHeight());
 		return r.contains(x, y);
 	}
+	
+	public boolean offsetContains(int mouseX, int mouseY, int xOffset, int yOffset){
+		Rectangle r = new Rectangle(this.x - xOffset, this.y - yOffset, image.getWidth(), image.getHeight());
+		return r.contains(mouseX, mouseY);
+	}
 
 	@Override
 	public void render(Graphics g, int xOffset, int yOffset) {

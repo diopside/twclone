@@ -11,6 +11,7 @@ import org.newdawn.slick.state.StateBasedGame;
 import entities.world.Territory;
 import entities.world.World;
 import gui.Hud;
+import gui.Menu;
 
 public class WorldState extends BasicGameState {
 
@@ -20,7 +21,7 @@ public class WorldState extends BasicGameState {
 	private World world;
 	private int xOffset, yOffset;
 	private Hud hud;
-
+	private Menu popupMenu;
 
 	public WorldState(int id){
 		ID = id;
@@ -32,6 +33,7 @@ public class WorldState extends BasicGameState {
 		world = World.generateWorld();
 		hud = new Hud();
 		hud.getMiniMap().setTerritories(world.getTerritories());
+		popupMenu = new Menu("res/menus/popupmenu.png", 129, 2, 29); // the last 3 are the image specific locations of the close box
 	}
 
 	@Override
@@ -39,6 +41,11 @@ public class WorldState extends BasicGameState {
 			Graphics g) throws SlickException {
 		g.setBackground(Color.black);
 		world.render(g, xOffset, yOffset);
+		
+		
+		if (popupMenu.isActive())
+			popupMenu.render(g, xOffset, yOffset);
+		
 		hud.render(g);
 		hud.getMiniMap().render(g, xOffset, yOffset);
 	}
@@ -63,8 +70,26 @@ public class WorldState extends BasicGameState {
 				yOffset -= SCROLL_SPEED * delta;
 		}
 		if (input.isKeyDown(input.KEY_S) || mouseY >= Game.HEIGHT - 20){
-			if (yOffset + Game.HEIGHT < Territory.TERRITORY_SIZE * 8 + 100)
+			if (yOffset + Game.HEIGHT < Territory.TERRITORY_SIZE * 8 + 300)
 				yOffset += SCROLL_SPEED * delta;
+		}
+		
+		if (input.isMousePressed(input.MOUSE_LEFT_BUTTON)){
+			for (Territory t: world.getTerritories()){
+				if (t.onScreen(xOffset, yOffset))
+					if (t.onBaseIcon(mouseX, mouseY, xOffset, yOffset)){
+						if (popupMenu.isActive())
+							popupMenu.deselect();
+						popupMenu.selectTerritory(t);
+						break;
+					}
+						
+				
+			}
+			if (popupMenu.isActive()){
+				if (popupMenu.getCloseRectangle(xOffset, yOffset).contains(mouseX, mouseY))
+					popupMenu.setActive(false);
+			}
 		}
 
 

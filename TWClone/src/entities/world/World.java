@@ -42,7 +42,7 @@ public class World {
 			ts[i] = new Territory(r, (short) i);
 		}
 		for (int i = 0; i < fs.length; i ++)
-			fs[i] = new Faction();
+			fs[i] = new Faction(""+i);
 		
 		world = new World(ts, fs, 500);
 		
