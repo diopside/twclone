@@ -72,19 +72,23 @@ public class Territory {
 	}
 
 	public Rectangle getRectangle(int xOffset, int yOffset){
+		// Returns the rectangle representing the territory itself
 		return new Rectangle(x - xOffset, y - yOffset, TERRITORY_SIZE, TERRITORY_SIZE);
 	}
 
 	public boolean onScreen(int xOffset, int yOffset){
+		// Returns true any part of the territory intersects the screen (and should be rendered for instance)
 		return getRectangle(xOffset, yOffset).intersects(Game.SCREEN);
 	}
 	
 	public boolean onBaseIcon(int mouseX, int mouseY, int xOffset, int yOffset){
+		// This method will return true if the mouse is within the icon representing the base in the territory
 		return baseIcon.getShape(xOffset, yOffset).contains(mouseX, mouseY);
 	}
 
 
 	public int getType(){
+		// The type of territory it is, eg Desert
 		return type;
 	}
 	public int getX(){

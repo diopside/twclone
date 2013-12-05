@@ -10,17 +10,26 @@ import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.state.StateBasedGame;
 
 import states.Game;
+import states.TerritoryState;
 import entities.world.Territory;
 
 public class Menu {
 	
 	
+	/* This class will be used to bring up menus when a territory is selected which will be located
+	 * Next to the base in the territory
+	 */
+	
+	
+
+	private final int CLOSE_BOX_X, CLOSE_BOX_Y, CLOSE_BOX_SIZE; // Constants based off the image file.
+	
 	private Image window;
 	private ArrayList<Button> buttons;
 	private int x, y;
-	private final int CLOSE_BOX_X, CLOSE_BOX_Y, CLOSE_BOX_SIZE;
-	private boolean active;
+	private boolean active; // Active will represent whether or not the menu should be rendered or not
 	private String header;
+	private Territory t;
 	
 	
 	
@@ -50,10 +59,12 @@ public class Menu {
 	}
 	
 	public Rectangle getCloseRectangle(int xOffset, int yOffset){
+		// This will return the rectangle containing the button to close the window
 		return new Rectangle(x + CLOSE_BOX_X - xOffset, y + CLOSE_BOX_Y - yOffset, CLOSE_BOX_SIZE, CLOSE_BOX_SIZE);
 	}
 	
 	public void selectTerritory(Territory t){
+		this.t = t;
 		final int X_SPACING = 50;
 		this.x = t.getX() + X_SPACING;
 		this.y = t.getY();
@@ -69,15 +80,21 @@ public class Menu {
 	}
 	
 	public void deselect(){
+		// The buttons must be cleared or else it will continue to render old buttons once the menu is moved
 		buttons.clear();
 		header = "";
 		active = false;
 	}
 	
 	public void checkButtons(int mouseX, int mouseY, int xOffset, int yOffset, StateBasedGame game){
+		// As of right now the only clickable button will be the one to enter the territory view.
 		for (Button b: buttons){
-			if (b instanceof BasicButton){
-				if (((BasicButton) b).offsetContains(mouseX, mouseY, xOffset, yOffset));
+			if (b instanceof BasicButton){ // Basic Buttons are clickable, the other ones will not be and will be used to display information
+				if (((BasicButton) b).offsetContains(mouseX, mouseY, xOffset, yOffset)){
+					TerritoryState ts = (TerritoryState) game.getState(Game.TERRITORY_STATE_ID);
+					ts.setTerritory(t);
+					game.enterState(Game.TERRITORY_STATE_ID);
+				}
 			}
 		}
 	}
@@ -86,7 +103,7 @@ public class Menu {
 	public void render(Graphics g, int xOffset, int yOffset){
 		window.draw(x - xOffset, y - yOffset);
 		g.setColor(Color.black);
-		g.drawString(header, x + 5 - xOffset, y + 5 - yOffset);
+		g.drawString(header, x + 5 - xOffset, y + 5 - yOffset); // The 5's are so the String isn't drawn on the margins of the window
 		
 		for (Button b: buttons){
 			b.render(g, xOffset, yOffset);

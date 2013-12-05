@@ -14,6 +14,10 @@ import gui.Hud;
 import gui.Menu;
 
 public class WorldState extends BasicGameState {
+	
+	/*
+	 * This state will contain the "world" that is each territory and unit placed on those territories
+	 */
 
 	private final int ID;
 	private static final float SCROLL_SPEED = 1.0f;
@@ -57,6 +61,12 @@ public class WorldState extends BasicGameState {
 		Input input = container.getInput();
 		int mouseX = input.getMouseX(); int mouseY = input.getMouseY();
 
+		
+		/*
+		 * This block of code is for map scrolling which can be done with WASD or moving the mouse to the margins of the screen
+		 * The nested if statement for each represents the distance off the map that can be scrolled to.  The bottom margin for this
+		 * is the greatest so that you can scroll far enough down that the hud doesn't obscure the map
+		 */
 		if (input.isKeyDown(input.KEY_A) || mouseX <= 20){
 			if (xOffset > -100)
 				xOffset -= SCROLL_SPEED * delta;
@@ -70,12 +80,16 @@ public class WorldState extends BasicGameState {
 				yOffset -= SCROLL_SPEED * delta;
 		}
 		if (input.isKeyDown(input.KEY_S) || mouseY >= Game.HEIGHT - 20){
-			if (yOffset + Game.HEIGHT < Territory.TERRITORY_SIZE * 8 + 300)
+			if (yOffset + Game.HEIGHT < Territory.TERRITORY_SIZE * 8 + 300) 
 				yOffset += SCROLL_SPEED * delta;
 		}
 		
+		
+		//****************************************
 		if (input.isMousePressed(input.MOUSE_LEFT_BUTTON)){
 			for (Territory t: world.getTerritories()){
+				
+				// This block will determine if the player has clicked one of the territory bases
 				if (t.onScreen(xOffset, yOffset))
 					if (t.onBaseIcon(mouseX, mouseY, xOffset, yOffset)){
 						if (popupMenu.isActive())
@@ -83,13 +97,17 @@ public class WorldState extends BasicGameState {
 						popupMenu.selectTerritory(t);
 						break;
 					}
-						
-				
-			}
+			} // End territory for loop
+			
+			
 			if (popupMenu.isActive()){
 				if (popupMenu.getCloseRectangle(xOffset, yOffset).contains(mouseX, mouseY))
 					popupMenu.setActive(false);
-			}
+				else {
+					// This will test to see if any menu button was selected, currently the only one is the button to enter the territory screen.
+					popupMenu.checkButtons(mouseX, mouseY, xOffset, yOffset, game);
+				}
+			}// end popup menu block
 		}
 
 
