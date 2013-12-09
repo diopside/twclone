@@ -6,12 +6,14 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.state.StateBasedGame;
 
+import entities.world.Tile;
+
 public class Game extends StateBasedGame{
 
 	public static final int WIDTH = 1200, HEIGHT = 800;
 	public static final Rectangle SCREEN = new Rectangle(0, 0, WIDTH, HEIGHT);
 	//State IDs
-	public static final int MAIN_MENU_STATE_ID = 0, WORLD_STATE_ID = 1, EMPIRE_STATE_ID = 2, TERRITORY_STATE_ID = 3, OPTIONS_STATE_ID = 4;
+	public static final int MAIN_MENU_STATE_ID = 0, WORLD_STATE_ID = 1, EMPIRE_STATE_ID = 2, TERRITORY_STATE_ID = 3, OPTIONS_STATE_ID = 4, TEST_STATE_ID = 5;
 	
 	
 	
@@ -23,6 +25,7 @@ public class Game extends StateBasedGame{
 		addState(new EmpireState(EMPIRE_STATE_ID));
 		addState(new TerritoryState(TERRITORY_STATE_ID));
 		addState(new Options(OPTIONS_STATE_ID));
+		addState(new TestState(TEST_STATE_ID));
 	}
 
 	@Override
@@ -30,7 +33,9 @@ public class Game extends StateBasedGame{
 		for (int i = 0; i < getStateCount(); i ++){
 			getState(i).init(container, this);
 		}
-		enterState(MAIN_MENU_STATE_ID);
+		//enterState(MAIN_MENU_STATE_ID);
+		enterState(TEST_STATE_ID);
+		Tile.initTiles();
 	}
 	
 	public static void main(String[] args){
