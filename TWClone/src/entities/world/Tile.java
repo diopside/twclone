@@ -37,7 +37,7 @@ public class Tile {
 	}
 	
 	public Rectangle getRectangle(int xOffset, int yOffset){
-		return new Rectangle(x * SIZE, y * SIZE, SIZE, SIZE);
+		return new Rectangle(x * SIZE - xOffset, y * SIZE - yOffset, SIZE, SIZE);
 	}
 	
 	public double distance(Tile t){

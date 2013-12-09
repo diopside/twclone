@@ -26,7 +26,7 @@ public class MapShape {
 	}
 
 	private void generateRegions(){
-		for (int i = 0; i < 50; i ++){
+		for (int i = 0; i < size + 1; i ++){
 			// the ternary operator guarantees one of each region type and then the rest are random
 			int type =  (i < 6) ? i : (int) (Math.random() * 6);
 			regions.add(new Region(type));
@@ -68,8 +68,7 @@ public class MapShape {
 
 
 		
-		//while (remainingSpaces > 0){
-		for (int i = 0; i < 100000; i ++){
+		while (remainingSpaces > 0){
 			Region r = regions.get((int) (Math.random() * regions.size()));
 			Tile t = r.getTiles().get((int) (Math.random() *r.getTiles().size()) );
 			Tile nt = null;
@@ -80,22 +79,31 @@ public class MapShape {
 				nt = new Tile(x - 1, y, 0);
 				r.addTile(nt);
 				tiles[x-1][y] = nt;
+
+				remainingSpaces --;
 			}
 			else if (x != size - 1 && tiles[x + 1][y] == null){
 				nt = new Tile(x + 1, y, 0);
 				r.addTile(nt);
 				tiles[x+1][y] = nt;
+
+				remainingSpaces --;
 			}
 			else if (y != size - 1 && tiles[x][y + 1] == null){
 				nt = new Tile(x, y + 1, 0);
 				r.addTile(nt);
 				tiles[x][y+1] = nt;
+
+				remainingSpaces --;
 			}
 			else if (y != 0 && tiles[x][y - 1] == null){
 				nt = new Tile(x, y - 1, 0);
 				r.addTile(nt);
 				tiles[x][y - 1] = nt;
+				remainingSpaces --;
 			}
+			
+			
 			
 		}
 
@@ -117,6 +125,10 @@ public class MapShape {
 
 	public ArrayList<Region> getRegions(){
 		return regions;
+	}
+	
+	public int getSize(){
+		return size;
 	}
 
 }

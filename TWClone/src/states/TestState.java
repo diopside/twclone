@@ -1,5 +1,6 @@
 package states;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
@@ -10,6 +11,7 @@ import org.newdawn.slick.state.StateBasedGame;
 import entities.world.MapShape;
 import entities.world.Region;
 import entities.world.Territory;
+import entities.world.Tile;
 
 public class TestState extends BasicGameState{
 	
@@ -27,7 +29,7 @@ public class TestState extends BasicGameState{
 	@Override
 	public void init(GameContainer container, StateBasedGame game)
 			throws SlickException {
-		map = new MapShape(64);
+		map = new MapShape(100);
 		long total = 0;
 		for (Region r: map.getRegions())
 			total += r.getTiles().size();
@@ -38,7 +40,7 @@ public class TestState extends BasicGameState{
 	public void render(GameContainer container, StateBasedGame game,
 			Graphics g) throws SlickException {
 		
-		
+		g.setBackground(Color.blue);
 		for (Region r: map.getRegions()){
 			
 			r.render(g, xOffset, yOffset);
@@ -63,7 +65,7 @@ public class TestState extends BasicGameState{
 				xOffset -= SCROLL_SPEED * delta;
 		}
 		if (input.isKeyDown(input.KEY_D) || mouseX >= Game.WIDTH - 20){
-			if (xOffset + Game.WIDTH < Territory.TERRITORY_SIZE * 8 + 100)
+			if (xOffset + Game.WIDTH < map.getSize()*Tile.SIZE + 100)
 				xOffset += SCROLL_SPEED * delta;
 		}
 		if (input.isKeyDown(input.KEY_W) || mouseY <= 20){
@@ -71,7 +73,7 @@ public class TestState extends BasicGameState{
 				yOffset -= SCROLL_SPEED * delta;
 		}
 		if (input.isKeyDown(input.KEY_S) || mouseY >= Game.HEIGHT - 20){
-			if (yOffset + Game.HEIGHT < Territory.TERRITORY_SIZE * 8 + 300) 
+			if (yOffset + Game.HEIGHT < map.getSize()*Tile.SIZE + 300) 
 				yOffset += SCROLL_SPEED * delta;
 		}
 		
