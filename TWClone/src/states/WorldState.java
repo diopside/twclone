@@ -9,6 +9,7 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 import entities.world.Territory;
+import entities.world.Tile;
 import entities.world.World;
 import gui.Hud;
 import gui.Menu;
@@ -36,7 +37,7 @@ public class WorldState extends BasicGameState {
 			throws SlickException {
 		world = World.generateWorld();
 		hud = new Hud();
-		hud.getMiniMap().setTerritories(world.getTerritories());
+		hud.getMiniMap().setInformation(world.getMap().getTiles(), world.getMap().getSize());
 		popupMenu = new Menu("res/menus/popupmenu.png", 129, 2, 29); // the last 3 are the image specific locations of the close box
 	}
 
@@ -72,7 +73,7 @@ public class WorldState extends BasicGameState {
 				xOffset -= SCROLL_SPEED * delta;
 		}
 		if (input.isKeyDown(input.KEY_D) || mouseX >= Game.WIDTH - 20){
-			if (xOffset + Game.WIDTH < Territory.TERRITORY_SIZE * 8 + 100)
+			if (xOffset + Game.WIDTH < world.getMap().getSize()*Tile.SIZE + 100)
 				xOffset += SCROLL_SPEED * delta;
 		}
 		if (input.isKeyDown(input.KEY_W) || mouseY <= 20){
@@ -80,7 +81,7 @@ public class WorldState extends BasicGameState {
 				yOffset -= SCROLL_SPEED * delta;
 		}
 		if (input.isKeyDown(input.KEY_S) || mouseY >= Game.HEIGHT - 20){
-			if (yOffset + Game.HEIGHT < Territory.TERRITORY_SIZE * 8 + 300) 
+			if (yOffset + Game.HEIGHT < world.getMap().getSize()*Tile.SIZE + 300) 
 				yOffset += SCROLL_SPEED * delta;
 		}
 		

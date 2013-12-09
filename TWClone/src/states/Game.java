@@ -33,8 +33,8 @@ public class Game extends StateBasedGame{
 		for (int i = 0; i < getStateCount(); i ++){
 			getState(i).init(container, this);
 		}
-		//enterState(MAIN_MENU_STATE_ID);
-		enterState(TEST_STATE_ID);
+		enterState(MAIN_MENU_STATE_ID);
+		//enterState(TEST_STATE_ID);
 		Tile.initTiles();
 	}
 	

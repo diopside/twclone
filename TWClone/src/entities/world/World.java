@@ -10,19 +10,20 @@ public class World {
 	private Territory[] territories;
 	private Faction[] factions;
 	private int year;
+	private MapShape map;
 	
 	private World(Territory[] territories, Faction[] factions, int year){
 		this.territories = territories;
 		this.factions = factions;
 		this.year = year;
+		map = new MapShape(100);
 	}
 	
 	
 	public void render(Graphics g, int xOffset, int yOffset){
 		
-		for (Territory t: territories){
-			t.render(g, xOffset, yOffset);
-		}
+		for (Region r: map.getRegions())
+			r.render(g, xOffset, yOffset);
 	}
 	
 	
@@ -53,6 +54,10 @@ public class World {
 	
 	public Territory[] getTerritories(){
 		return territories;
+	}
+	
+	public MapShape getMap(){
+		return map;
 	}
 	
 }

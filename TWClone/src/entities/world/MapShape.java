@@ -19,6 +19,7 @@ public class MapShape {
 	private void generateShape(){
 		for (int i = 0; i < size - 1; i ++){
 			for (int j = 0; j < size - 1; j ++){
+				// Each tile must first be initialized to null for later steps in the generation process
 				tiles[i][j] = null;
 			}
 		}
@@ -33,32 +34,28 @@ public class MapShape {
 		}
 
 
-
-
 		ArrayList<Tile> regionSeeds = new ArrayList<>();
 		while (regionSeeds.size() < regions.size()){
 			int x = (int) ( Math.random() * (size - 2)) + 1;
 			int y = (int) ( Math.random() * (size - 2)) + 1;
 			Tile t = new Tile(x, y, regionSeeds.size());
+			
 			boolean valid = true;
-			for (Tile seed: regionSeeds){
+			for (Tile seed: regionSeeds){ // Ensure the seeds start out a reasonable distance apart
 				if (seed.distance(t) < 3.0f){
 					valid = false;
 					break;
 				}
 			}
-			if (valid){
+			if (valid){ // If the new tile is spread away from the others, add it
 				tiles[x][y] = t;
 				regionSeeds.add(t);
 			}
-
 		}
 
-		for (int i = 0; i < regions.size(); i ++){
+		for (int i = 0; i < regions.size(); i ++) // Add the seeds to the regions
 			regions.get(i).addTile(regionSeeds.get(i));
-		}
-
-
+		
 		growRegionSeeds();
 
 	}
@@ -75,6 +72,11 @@ public class MapShape {
 			int x = t.getX();
 			int y = t.getY();
 			
+			/*
+			 * The if structure below will take the random region tile and attempt to "grow" it.
+			 * it does this by testing if the tile to the west, east, south, or north are currently null.
+			 * If this is the case it will add it to the region.
+			 */
 			if (x != 0 && tiles[x - 1][y] == null){
 				nt = new Tile(x - 1, y, 0);
 				r.addTile(nt);
@@ -106,6 +108,8 @@ public class MapShape {
 			
 			
 		}
+		
+		
 
 
 
@@ -113,7 +117,9 @@ public class MapShape {
 	}
 
 
-
+	public Tile[][] getTiles(){
+		return tiles;
+	}
 
 	private int countSpaces(){
 		int totalSpaces = 0;

@@ -54,6 +54,10 @@ public class Tile {
 	public void setID(int id){
 		this.id = id;
 	}
+	public int getType(){
+		// this will be used by the minimap
+		return id % 6;
+	}
 	
 	
 	
