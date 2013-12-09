@@ -6,6 +6,7 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.geom.Rectangle;
 
 import states.Game;
+import states.WorldState;
 import entities.world.Territory;
 import entities.world.Tile;
 import entities.world.World;
@@ -85,6 +86,17 @@ public class MiniMap {
 		g.setLineWidth(2.5f);
 
 		g.draw(window);
+	}
+	
+	
+	public Rectangle getRectangle(){
+		return new Rectangle(START_X, START_Y, SIZE, SIZE);
+	}
+
+	public void click(float mouseX, float mouseY, WorldState worldState) {
+		float mapX = (mouseX - START_X) / SIZE * (arrLength * Tile.SIZE) - Game.WIDTH/2;
+		float mapY = (mouseY - START_Y) / SIZE * (arrLength * Tile.SIZE) - Game.HEIGHT/2;
+		worldState.setOffsets( (int) mapX, (int) mapY);
 	}
 
 

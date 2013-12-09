@@ -88,6 +88,10 @@ public class WorldState extends BasicGameState {
 		
 		//****************************************
 		if (input.isMousePressed(input.MOUSE_LEFT_BUTTON)){
+			if (hud.getMiniMap().getRectangle().contains(mouseX, mouseY)){
+				hud.getMiniMap().click(mouseX, mouseY, this);
+			}
+			
 			for (Territory t: world.getTerritories()){
 				
 				// This block will determine if the player has clicked one of the territory bases
@@ -112,6 +116,11 @@ public class WorldState extends BasicGameState {
 		}
 
 
+	}
+	
+	public void setOffsets(int xOff, int yOff){
+		xOffset = xOff;
+		yOffset = yOff;
 	}
 
 	@Override
