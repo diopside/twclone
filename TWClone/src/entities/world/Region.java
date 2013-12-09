@@ -22,6 +22,8 @@ public class Region {
 	public void render(Graphics g, int xOffset, int yOffset){
 		for (Tile t: tiles)
 			t.render(g, xOffset, yOffset);
+		
+		
 	}
 	
 	public int getType(){
@@ -39,6 +41,13 @@ public class Region {
 				tiles.add(new Tile( (byte) (x + i),(byte) (y + j),(byte) id ));
 			}
 		}
+	}
+	
+	public void addTile(Tile t){
+		
+		t.setID(type + (6 *((int) (Math.random() * 4))));
+		tiles.add(t);
+		
 	}
 	
 	

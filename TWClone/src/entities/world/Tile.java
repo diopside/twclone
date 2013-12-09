@@ -13,9 +13,9 @@ public class Tile {
 	public static Image[] tiles; // static holder for tile images
 	public static final int SIZE = 32; // size of the tiles
 	
-	private byte id, x, y;
+	private int id, x, y;
 	
-	public Tile(byte x, byte y, byte id){
+	public Tile(int x, int y, int id){
 		this.x = x;
 		this.y = y;
 		this.id = id;
@@ -33,13 +33,26 @@ public class Tile {
 	public void render(Graphics g, int xOffset, int yOffset){
 		if (getRectangle(xOffset, yOffset).intersects(Game.SCREEN)){
 			tiles[id].draw(x * SIZE - xOffset, y * SIZE - yOffset);
-			g.setColor(Color.black);
-			//g.draw(new Rectangle(x * SIZE - xOffset, y * SIZE - yOffset, SIZE, SIZE));
 		}
 	}
 	
 	public Rectangle getRectangle(int xOffset, int yOffset){
 		return new Rectangle(x * SIZE, y * SIZE, SIZE, SIZE);
+	}
+	
+	public double distance(Tile t){
+		return Math.sqrt(  (this.x - t.getX())*(this.x - t.getX()) + (this.y - t.getY())*(this.y - t.getY()) );
+	}
+	
+	public int getX(){
+		return x;
+	}
+	public int getY(){
+		return y;
+	}
+	
+	public void setID(int id){
+		this.id = id;
 	}
 	
 	
@@ -49,15 +62,17 @@ public class Tile {
 		try{
 			tiles[0] = new Image("res/tiles/grass.png");
 			tiles[1] = new Image("res/tiles/forest.png");
-			tiles[2] = new Image("res/tiles/forest.png");
-			tiles[3] = new Image("res/tiles/forest.png");
-			tiles[4] = new Image("res/tiles/forest.png");
-			tiles[5] = new Image("res/tiles/forest.png");
+			tiles[2] = new Image("res/tiles/desert.png");
+			tiles[3] = new Image("res/tiles/marsh.png");
+			tiles[4] = new Image("res/tiles/snow.png");
+			tiles[5] = new Image("res/tiles/mountain.png");
+			
 		}
 		catch (SlickException e){
 			e.printStackTrace();
 		}
 		finally{
+			
 			for (int i = 1; i < 4; i ++)
 				for (int j = 0; j < 6; j ++){
 					if (i == 1)
@@ -73,4 +88,5 @@ public class Tile {
 
 	} // end tile init
 
+	                                       
 }

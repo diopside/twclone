@@ -4,49 +4,60 @@ import java.util.ArrayList;
 
 public class MapShape {
 
-	private boolean[][] spaces;
+	private Tile[][] tiles;
 	private ArrayList<Region> regions;
-	private ArrayList<RTriple> triples;
 	private int size;
 
 
 	public MapShape(int size){
 		this.size = size;
-		spaces = new boolean[size][size];
+		tiles = new Tile[size][size];
 		regions = new ArrayList<>();
-		triples = new ArrayList<>();
 		generateShape();
 	}
 
 	private void generateShape(){
-		for (int i = 1; i < size - 1; i ++){
-			for (int j = 1; j < size - 1; j ++){
-				spaces[i][j] = true;
+		for (int i = 0; i < size - 1; i ++){
+			for (int j = 0; j < size - 1; j ++){
+				tiles[i][j] = null;
 			}
 		}
 		generateRegions();
 	}
 
 	private void generateRegions(){
-		for (int i = 0; i < size + 1; i ++){
+		for (int i = 0; i < 50; i ++){
 			// the ternary operator guarantees one of each region type and then the rest are random
 			int type =  (i < 6) ? i : (int) (Math.random() * 6);
 			regions.add(new Region(type));
 		}
 
-		int totalSpaces = countSpaces(); // the total number of available spaces
-		totalSpaces /= size; // get spacing for region seed.
 
-		for (int i = 1; i < regions.size() + 1; i ++){
-			// This method will generate "seeds" off of which regions will grow
-			// The x and y variables are assigned to somewhat evenly space seeds about the map.
-			int x = totalSpaces / i;
-			int y = totalSpaces % i;
 
-			regions.get(i - 1).addTile(x, y);
-			triples.add(new RTriple(x, y, i - 1));
-			spaces[x][y] = false;
+
+		ArrayList<Tile> regionSeeds = new ArrayList<>();
+		while (regionSeeds.size() < regions.size()){
+			int x = (int) ( Math.random() * (size - 2)) + 1;
+			int y = (int) ( Math.random() * (size - 2)) + 1;
+			Tile t = new Tile(x, y, regionSeeds.size());
+			boolean valid = true;
+			for (Tile seed: regionSeeds){
+				if (seed.distance(t) < 3.0f){
+					valid = false;
+					break;
+				}
+			}
+			if (valid){
+				tiles[x][y] = t;
+				regionSeeds.add(t);
+			}
+
 		}
+
+		for (int i = 0; i < regions.size(); i ++){
+			regions.get(i).addTile(regionSeeds.get(i));
+		}
+
 
 		growRegionSeeds();
 
@@ -56,44 +67,51 @@ public class MapShape {
 		int remainingSpaces = countSpaces();
 
 
-		while (remainingSpaces > 0){
-			RTriple r = null;
-			RTriple rt = triples.get((int) (Math.random() * triples.size()));
-			if (Math.random() > .2){
-				if (spaces[rt.x + 1][rt.y] && rt.x + 1 < size){
-					regions.get(rt.region).addTile(rt.x + 1, rt.y);
-					r = new RTriple(rt.x + 1, rt.y, rt.region);
-					remainingSpaces --;
-				}
-				else if(spaces[rt.x - 1][rt.y] && rt.x - 1 >= 0){
-					regions.get(rt.region).addTile(rt.x - 1, rt.y);
-					r = new RTriple(rt.x - 1, rt.y, rt.region);
-					remainingSpaces --;
-				}
-				else if( rt.y -1 >= 0 && spaces[rt.x][rt.y - 1]){
-					regions.get(rt.region).addTile(rt.x, rt.y - 1);
-					r = new RTriple(rt.x, rt.y - 1, rt.region);
-					remainingSpaces --;
-				}
-				else if(spaces[rt.x][rt.y + 1] && rt.y + 1 < size){
-					regions.get(rt.region).addTile(rt.x + 1, rt.y + 1);
-					r = new RTriple(rt.x , rt.y+ 1, rt.region);
-					remainingSpaces --;
-				}
-
+		
+		//while (remainingSpaces > 0){
+		for (int i = 0; i < 100000; i ++){
+			Region r = regions.get((int) (Math.random() * regions.size()));
+			Tile t = r.getTiles().get((int) (Math.random() *r.getTiles().size()) );
+			Tile nt = null;
+			int x = t.getX();
+			int y = t.getY();
+			
+			if (x != 0 && tiles[x - 1][y] == null){
+				nt = new Tile(x - 1, y, 0);
+				r.addTile(nt);
+				tiles[x-1][y] = nt;
 			}
-
-			if (r != null)
-				triples.add(r);
+			else if (x != size - 1 && tiles[x + 1][y] == null){
+				nt = new Tile(x + 1, y, 0);
+				r.addTile(nt);
+				tiles[x+1][y] = nt;
+			}
+			else if (y != size - 1 && tiles[x][y + 1] == null){
+				nt = new Tile(x, y + 1, 0);
+				r.addTile(nt);
+				tiles[x][y+1] = nt;
+			}
+			else if (y != 0 && tiles[x][y - 1] == null){
+				nt = new Tile(x, y - 1, 0);
+				r.addTile(nt);
+				tiles[x][y - 1] = nt;
+			}
+			
 		}
+
+
+
+
 	}
+
+
 
 
 	private int countSpaces(){
 		int totalSpaces = 0;
-		for (boolean[] a: spaces)
-			for (boolean b: a)
-				if (b) totalSpaces ++;
+		for (Tile[] a: tiles)
+			for (Tile b: a)
+				if (b == null) totalSpaces ++;
 		return totalSpaces;
 	}
 
@@ -101,16 +119,6 @@ public class MapShape {
 		return regions;
 	}
 
-
-	class RTriple{
-		public int x, y, region;
-
-		public RTriple(int x, int y, int region){
-			this.x = x;
-			this.y = y;
-			this.region = region;
-		}
-	}
 }
 
 

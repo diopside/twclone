@@ -27,11 +27,10 @@ public class TestState extends BasicGameState{
 	@Override
 	public void init(GameContainer container, StateBasedGame game)
 			throws SlickException {
-		map = new MapShape(16);
+		map = new MapShape(64);
 		long total = 0;
 		for (Region r: map.getRegions())
 			total += r.getTiles().size();
-		System.out.println(total);
 
 	}
 
