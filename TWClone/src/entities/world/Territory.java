@@ -60,7 +60,7 @@ public class Territory {
 				g.setColor(Color.darkGray);
 			}
 
-			g.fill(newShape);
+			//g.fill(newShape);
 
 			g.setColor(Color.black); // Draw the Borders
 			g.setLineWidth(5f);

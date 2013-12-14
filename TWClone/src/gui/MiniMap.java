@@ -1,8 +1,11 @@
 package gui;
 
+import java.util.ArrayList;
+
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.geom.Line;
 import org.newdawn.slick.geom.Rectangle;
 
 import states.Game;
@@ -17,61 +20,54 @@ public class MiniMap {
 	private static Color forest = new Color(0x264200), plains = new Color(0x26BE00), desert = new Color(0xFFE97F), 
 			tundra = new Color(0xE2E2E2), mountains = new Color(0x404040), marsh = new Color(0x007F46);
 	private float arrLength;
-	private byte[][] pixels;
+	private ArrayList<ColoredShape> lines;
 
 	public MiniMap(){
-
+		lines = new ArrayList<>();
 	}
 
 	public void setInformation(Tile[][] t, int length){
 		arrLength = length;
-		pixels = new byte[length][length];
+		float rSize = (float) (SIZE / arrLength);
+		
+		// This block of code will create a new Line and Color pair to correspond with each tile on the map
+		// This pair will then be rendered to represent the minimap.
 		for (int i = 0; i < arrLength; i ++){
 			for (int j = 0; j < arrLength; j ++){
 				Tile tile = t[i][j];
-				pixels[i][j] = (byte) tile.getType();
-
+				Color color = null;
+				switch (tile.getType()){
+				case 0:
+					color = plains; break;
+				case 1: 
+					color = forest; break;
+				case 2:
+					color = desert; break;
+				case 3:
+					color = marsh; break;
+				case 4:
+					color = tundra; break;
+				case 5:
+					color = mountains; break;
+				}
+				Line line = new Line(i * rSize + START_X, j * rSize + START_Y, (i + 1) * rSize + START_X, (j+1)*rSize + START_Y);
+				lines.add(new ColoredShape(line, color));
+				
 			}
 		}
 	}
 
 	public void render(Graphics g, int xOffset, int yOffset){
 		float rSize = (float) (SIZE / arrLength);
-		for (int i = 0; i < arrLength; i ++){
-			for (int j = 0; j < arrLength; j ++){
-				int type = pixels[i][j];
-				switch (type){
-				case 0:
-					g.setColor(plains);
-					break;
-				case 1: 
-					g.setColor(forest);// will temporarily be used to represent a forest
-					break;
-				case 2:
-					g.setColor(desert);
-					break;
-				case 3:
-					g.setColor(marsh);
-					break;
-				case 4:
-					g.setColor(tundra);
-					break;
-				case 5:
-					g.setColor(mountains);
-				}
-
-				g.setLineWidth(rSize);
-				g.drawLine(i * rSize + START_X, j * rSize + START_Y, (i + 1) * rSize + START_X, (j+1)*rSize + START_Y);
-			}
-		} // end territory squares render
-
-
-
+		g.setLineWidth(rSize);
+		for (ColoredShape cs: lines){
+			g.setColor(cs.getColor());
+			g.draw(cs.getShape());
+		}
 
 
 		// This next block of code will deal with rendering the a box representing the screen onto the minimap to give the player
 		// a representation of which part of the map they are looking at.
-
 		Rectangle window;
 		float mapSize = Tile.SIZE * arrLength;
 		float xScale = Game.WIDTH / mapSize;
@@ -82,13 +78,13 @@ public class MiniMap {
 
 		window = new Rectangle(windowX + START_X, windowY + START_Y, xScale * SIZE, yScale * SIZE);
 
-		g.setColor(Color.black);
+		// Make the window representing the screen black and draw it
+		g.setColor(Color.black); 
 		g.setLineWidth(2.5f);
-
 		g.draw(window);
 	}
-	
-	
+
+
 	public Rectangle getRectangle(){
 		return new Rectangle(START_X, START_Y, SIZE, SIZE);
 	}

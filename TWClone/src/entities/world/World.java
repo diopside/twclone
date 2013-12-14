@@ -24,6 +24,8 @@ public class World {
 		
 		for (Region r: map.getRegions())
 			r.render(g, xOffset, yOffset);
+		for (Territory t: territories)
+			t.render(g, xOffset, yOffset);
 	}
 	
 	
