@@ -7,13 +7,11 @@ import entities.Faction;
 
 public class World {
 
-	private Territory[] territories;
 	private Faction[] factions;
 	private int year;
 	private MapShape map;
 	
-	private World(Territory[] territories, Faction[] factions, int year){
-		this.territories = territories;
+	private World(Faction[] factions, int year){
 		this.factions = factions;
 		this.year = year;
 		map = new MapShape(100);
@@ -24,7 +22,7 @@ public class World {
 		
 		for (Region r: map.getRegions())
 			r.render(g, xOffset, yOffset);
-		for (Territory t: territories)
+		for (Territory t: map.getTerritories())
 			t.render(g, xOffset, yOffset);
 	}
 	
@@ -37,26 +35,20 @@ public class World {
 	//*************************************** Static Methods **********************************************
 	public static World generateWorld(){
 		World world;
-		Territory[] ts = new Territory[64];
 		Faction[] fs = new Faction[4];
 		
-		for (int i = 0; i <  ts.length ; i ++){
-			Rectangle r = new Rectangle( (i % 8) * Territory.TERRITORY_SIZE, (i / 8) * Territory.TERRITORY_SIZE, Territory.TERRITORY_SIZE, Territory.TERRITORY_SIZE);
-			ts[i] = new Territory(r, (short) i);
-		}
+		
 		for (int i = 0; i < fs.length; i ++)
 			fs[i] = new Faction(""+i);
 		
-		world = new World(ts, fs, 500);
+		world = new World(fs, 500);
 		
 		return world;
 	}
 	
 	//********************************************* Getters and Setters ******************************************
 	
-	public Territory[] getTerritories(){
-		return territories;
-	}
+	
 	
 	public MapShape getMap(){
 		return map;

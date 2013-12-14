@@ -6,6 +6,7 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.state.StateBasedGame;
 
+import entities.world.Territory;
 import entities.world.Tile;
 
 public class Game extends StateBasedGame{
@@ -34,8 +35,8 @@ public class Game extends StateBasedGame{
 			getState(i).init(container, this);
 		}
 		enterState(MAIN_MENU_STATE_ID);
-		//enterState(TEST_STATE_ID);
 		Tile.initTiles();
+		Territory.initStaticMembers();
 	}
 	
 	public static void main(String[] args){

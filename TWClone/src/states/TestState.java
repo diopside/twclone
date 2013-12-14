@@ -19,8 +19,6 @@ public class TestState extends BasicGameState{
 	private static final float SCROLL_SPEED = 1.0f;
 	
 	private final int ID;
-	private MapShape map;
-	private int xOffset, yOffset;
 	
 	public TestState(int id){
 		ID = id;
@@ -29,10 +27,6 @@ public class TestState extends BasicGameState{
 	@Override
 	public void init(GameContainer container, StateBasedGame game)
 			throws SlickException {
-		map = new MapShape(100);
-		long total = 0;
-		for (Region r: map.getRegions())
-			total += r.getTiles().size();
 
 	}
 
@@ -40,12 +34,7 @@ public class TestState extends BasicGameState{
 	public void render(GameContainer container, StateBasedGame game,
 			Graphics g) throws SlickException {
 		
-		g.setBackground(Color.blue);
-		for (Region r: map.getRegions()){
-			
-			r.render(g, xOffset, yOffset);
-		}
-
+		
 	}
 
 	@Override
@@ -55,27 +44,7 @@ public class TestState extends BasicGameState{
 		Input input = container.getInput();
 		int mouseX = input.getMouseX(); int mouseY = input.getMouseY();
 
-		/*
-		 * This block of code is for map scrolling which can be done with WASD or moving the mouse to the margins of the screen
-		 * The nested if statement for each represents the distance off the map that can be scrolled to.  The bottom margin for this
-		 * is the greatest so that you can scroll far enough down that the hud doesn't obscure the map
-		 */
-		if (input.isKeyDown(input.KEY_A) || mouseX <= 20){
-			if (xOffset > -100)
-				xOffset -= SCROLL_SPEED * delta;
-		}
-		if (input.isKeyDown(input.KEY_D) || mouseX >= Game.WIDTH - 20){
-			if (xOffset + Game.WIDTH < map.getSize()*Tile.SIZE + 100)
-				xOffset += SCROLL_SPEED * delta;
-		}
-		if (input.isKeyDown(input.KEY_W) || mouseY <= 20){
-			if (yOffset > -100)
-				yOffset -= SCROLL_SPEED * delta;
-		}
-		if (input.isKeyDown(input.KEY_S) || mouseY >= Game.HEIGHT - 20){
-			if (yOffset + Game.HEIGHT < map.getSize()*Tile.SIZE + 300) 
-				yOffset += SCROLL_SPEED * delta;
-		}
+		
 		
 
 	}

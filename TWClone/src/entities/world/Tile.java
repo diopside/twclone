@@ -1,5 +1,8 @@
 package entities.world;
 
+import gui.ToolTip;
+import gui.ToolTippable;
+
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -8,17 +11,19 @@ import org.newdawn.slick.geom.Rectangle;
 
 import states.Game;
 
-public class Tile {
+public class Tile implements ToolTippable {
 
 	public static Image[] tiles; // static holder for tile images
 	public static final int SIZE = 32; // size of the tiles
 	
 	private int id, x, y;
+	private Territory territory;
 	
 	public Tile(int x, int y, int id){
 		this.x = x;
 		this.y = y;
 		this.id = id;
+		territory = null;
 	}
 	
 	
@@ -28,7 +33,12 @@ public class Tile {
 
 
 
-
+	public void setTerritory(Territory t){
+		territory = t;
+	}
+	public Territory getTerritory(){
+		return territory;
+	}
 
 	public void render(Graphics g, int xOffset, int yOffset){
 		if (getRectangle(xOffset, yOffset).intersects(Game.SCREEN)){
@@ -54,11 +64,17 @@ public class Tile {
 	public void setID(int id){
 		this.id = id;
 	}
+	public int getID(){
+		return id;
+	}
 	public int getType(){
 		// this will be used by the minimap
 		return id % 6;
 	}
-	
+	public boolean equals(Tile other){
+		return (this.id == other.id);
+		
+	}
 	
 	
 	public static void initTiles(){
@@ -91,6 +107,16 @@ public class Tile {
 		}
 
 	} // end tile init
+
+	@Override
+	public void setToolTip(ToolTip tt) {
+		tt.setX(this.x * SIZE + SIZE);
+		tt.setY(this.y * SIZE + SIZE);
+		String message = "TILE-ID: " + this.id + "   " + territory.getName();
+		tt.setMessage(message);
+		tt.setActive(!tt.isActive());
+		
+	}
 
 	                                       
 }

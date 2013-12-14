@@ -13,6 +13,7 @@ import entities.world.Tile;
 import entities.world.World;
 import gui.Hud;
 import gui.Menu;
+import gui.ToolTip;
 
 public class WorldState extends BasicGameState {
 	
@@ -27,6 +28,8 @@ public class WorldState extends BasicGameState {
 	private int xOffset, yOffset;
 	private Hud hud;
 	private Menu popupMenu;
+	private ToolTip toolTip;
+	
 
 	public WorldState(int id){
 		ID = id;
@@ -39,20 +42,24 @@ public class WorldState extends BasicGameState {
 		hud = new Hud();
 		hud.getMiniMap().setInformation(world.getMap().getTiles(), world.getMap().getSize());
 		popupMenu = new Menu("res/menus/popupmenu.png", 129, 2, 29); // the last 3 are the image specific locations of the close box
+		toolTip = new ToolTip(0, 0, "");
 	}
 
 	@Override
 	public void render(GameContainer container, StateBasedGame game,
 			Graphics g) throws SlickException {
+		
 		g.setBackground(Color.black);
 		world.render(g, xOffset, yOffset);
-		
-		
 		if (popupMenu.isActive())
 			popupMenu.render(g, xOffset, yOffset);
 		
 		hud.render(g);
 		hud.getMiniMap().render(g, xOffset, yOffset);
+		
+		if (toolTip.isActive()){
+			toolTip.render(g, xOffset, yOffset);
+		}
 	}
 
 	@Override
@@ -92,7 +99,7 @@ public class WorldState extends BasicGameState {
 				hud.getMiniMap().click(mouseX, mouseY, this);
 			}
 			
-			for (Territory t: world.getTerritories()){
+			for (Territory t: world.getMap().getTerritories()){
 				
 				// This block will determine if the player has clicked one of the territory bases
 				if (t.onScreen(xOffset, yOffset))
@@ -113,6 +120,19 @@ public class WorldState extends BasicGameState {
 					popupMenu.checkButtons(mouseX, mouseY, xOffset, yOffset, game);
 				}
 			}// end popup menu block
+		}  // end left button block
+		
+		if (input.isMousePressed(input.MOUSE_RIGHT_BUTTON)){
+			int absoluteMouseX = mouseX + xOffset;
+			int absoluteMouseY = mouseY + yOffset;
+			int tX = absoluteMouseX / Tile.SIZE;
+			int tY = absoluteMouseY / Tile.SIZE;
+			
+			if (tX >= 0 && tX <= 63)
+				if (tY >= 0 && tY <= 63){
+					Tile t = world.getMap().getTiles()[tX][tY];
+					t.setToolTip(toolTip);
+				}
 		}
 
 
