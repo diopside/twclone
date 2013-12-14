@@ -49,7 +49,7 @@ public class WorldState extends BasicGameState {
 	public void render(GameContainer container, StateBasedGame game,
 			Graphics g) throws SlickException {
 		
-		g.setBackground(Color.black);
+		g.setBackground(Color.blue);
 		world.render(g, xOffset, yOffset);
 		if (popupMenu.isActive())
 			popupMenu.render(g, xOffset, yOffset);

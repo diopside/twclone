@@ -35,7 +35,7 @@ public class ToolTip {
 	
 	public void render(Graphics g, int xOffset, int yOffset){
 		window.draw(x - xOffset, y - yOffset);
-		g.setColor(Color.pink);
+		g.setColor(Color.black);
 		
 		g.drawString(message, x - xOffset + 10, y - yOffset + 10);
 	}

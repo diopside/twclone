@@ -36,7 +36,7 @@ public class MapShape {
 	}
 
 	private void generateRegions(){
-		for (int i = 0; i < size + 1; i ++){
+		for (int i = 0; i < size * .75; i ++){
 			// the ternary operator guarantees one of each region type and then the rest are random
 			int type =  (i < 6) ? i : (int) (Math.random() * 6);
 			regions.add(new Region(type));
@@ -187,12 +187,10 @@ public class MapShape {
 			for (Tile tile: t.getTiles()){
 				setBorders(tile, t);
 			}
-			System.out.println(t.getBorder().size());
 		}
 		
-		
-		
 	}
+	
 	private void setBorders(Tile tile, Territory t){
 		int tX = tile.getX();
 		int tY = tile.getY();

@@ -15,7 +15,6 @@ import gui.OffsetLine;
 
 public class Territory {
 	
-	private static Image NEUTRAL_FLAG;
 
 
 	private final short ID;
@@ -26,6 +25,7 @@ public class Territory {
 	private ArrayList<OffsetLine> border;
 	private int x, y;
 	private ArrayList<Tile> tiles;
+	
 	
 
 
@@ -47,11 +47,15 @@ public class Territory {
 		
 
 		if (baseIcon.getShape(xOffset, yOffset).intersects(Game.SCREEN)){
-			baseIcon.render(g, xOffset, yOffset);
+			baseIcon.render(g, xOffset, yOffset, owner);
+				
 		}
 		
 		g.setLineWidth(3f);
-		g.setColor(Color.black);
+		if (owner == null)
+			g.setColor(Faction.NEUTRAL_COLOR);
+		else
+			g.setColor(owner.getColor());
 		for (OffsetLine ol: border){
 			Line line = ol.getOffsetLine(xOffset, yOffset);
 			g.draw(line);
@@ -63,7 +67,14 @@ public class Territory {
 	public ArrayList<OffsetLine> getBorder(){
 		return border;
 	}
+	
+	public Faction getOwner(){
+		return owner;
+	}
 
+	public void setOwner(Faction f){
+		this.owner = f;
+	}
 	public boolean onScreen(int xOffset, int yOffset){
 		return baseIcon.getShape(xOffset, yOffset).intersects(Game.SCREEN);
 	}
@@ -101,12 +112,5 @@ public class Territory {
 
 	
 	
-	public static void initStaticMembers(){
-		try {
-			NEUTRAL_FLAG = new Image("res/icons/flags/white.png");
-		} catch (SlickException exception) {
-			// TODO Auto-generated catch-block stub.
-			exception.printStackTrace();
-		}
-	}
+	
 }

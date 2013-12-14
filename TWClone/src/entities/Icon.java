@@ -39,8 +39,14 @@ public class Icon {
 	
 	
 	
-	public void render(Graphics g, int xOffset, int yOffset){
+	public void render(Graphics g, int xOffset, int yOffset, Faction f){
 		icon.draw(x - xOffset, y - yOffset);
+		if (f == null){
+			f.NEUTRAL_FLAG.draw(x-xOffset + icon.getWidth()/2f, y - f.NEUTRAL_FLAG.getHeight() - yOffset); 
+		}
+		else {
+			f.getFlag().draw(x-xOffset + icon.getWidth()/2f, y - f.NEUTRAL_FLAG.getHeight() - yOffset);
+		}
 	}
 	
 	
