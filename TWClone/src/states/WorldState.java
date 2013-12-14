@@ -114,7 +114,7 @@ public class WorldState extends BasicGameState {
 			
 			if (popupMenu.isActive()){
 				if (popupMenu.getCloseRectangle(xOffset, yOffset).contains(mouseX, mouseY))
-					popupMenu.setActive(false);
+					popupMenu.deselect();
 				else {
 					// This will test to see if any menu button was selected, currently the only one is the button to enter the territory screen.
 					popupMenu.checkButtons(mouseX, mouseY, xOffset, yOffset, game);
