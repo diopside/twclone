@@ -1,5 +1,7 @@
 package states;
 
+import java.util.ArrayList;
+
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -8,6 +10,8 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
+import entities.Coordinates;
+import entities.Draggable;
 import entities.world.Territory;
 import entities.world.Tile;
 import entities.world.World;
@@ -16,7 +20,7 @@ import gui.Menu;
 import gui.ToolTip;
 
 public class WorldState extends BasicGameState {
-	
+
 	/*
 	 * This state will contain the "world" that is each territory and unit placed on those territories
 	 */
@@ -29,8 +33,14 @@ public class WorldState extends BasicGameState {
 	private Hud hud;
 	private Menu popupMenu;
 	private ToolTip toolTip;
-	
 
+	// The following variables will be used in dragging objects around the world
+	private ArrayList<Draggable> draggables;
+	private Draggable draggedObject;
+	private Coordinates draggedObjectOffCoords;
+
+
+	//**************************** Constructors and Initialization Methods ***********************************************
 	public WorldState(int id){
 		ID = id;
 	}
@@ -41,26 +51,31 @@ public class WorldState extends BasicGameState {
 		world = World.generateWorld();
 		hud = new Hud();
 		hud.getMiniMap().setInformation(world.getMap().getTiles(), world.getMap().getSize());
-		popupMenu = new Menu("res/menus/popupmenu.png", 129, 2, 29); // the last 3 are the image specific locations of the close box
+		popupMenu = new Menu("res/menus/popupmenu.png", 129, 2, 29, 127, 32); // the last 5 are the image specific locations of the close box and top bar
 		toolTip = new ToolTip(0, 0, "");
+		draggables = new ArrayList<>();
+		draggables.add(popupMenu);
+		draggables.add(toolTip);
 	}
 
+
+	//******************************* StateBasedGame Methods ************************************************
 	@Override
 	public void render(GameContainer container, StateBasedGame game,
 			Graphics g) throws SlickException {
-		
+
 		g.setBackground(Color.blue);
 		world.render(g, xOffset, yOffset);
 		if (popupMenu.isActive())
 			popupMenu.render(g, xOffset, yOffset);
-		
+
 		hud.render(g);
 		hud.getMiniMap().render(g, xOffset, yOffset);
-		
+
 		if (toolTip.isActive()){
 			toolTip.render(g, xOffset, yOffset);
 		}
-	}
+	} // END RENDER METHOD
 
 	@Override
 	public void update(GameContainer container, StateBasedGame game, int delta)
@@ -69,7 +84,7 @@ public class WorldState extends BasicGameState {
 		Input input = container.getInput();
 		int mouseX = input.getMouseX(); int mouseY = input.getMouseY();
 
-		
+
 		/*
 		 * This block of code is for map scrolling which can be done with WASD or moving the mouse to the margins of the screen
 		 * The nested if statement for each represents the distance off the map that can be scrolled to.  The bottom margin for this
@@ -91,16 +106,15 @@ public class WorldState extends BasicGameState {
 			if (yOffset + Game.HEIGHT < world.getMap().getSize()*Tile.SIZE + 300) 
 				yOffset += SCROLL_SPEED * delta;
 		}
-		
-		
+
+
 		//****************************************
 		if (input.isMousePressed(input.MOUSE_LEFT_BUTTON)){
 			if (hud.getMiniMap().getRectangle().contains(mouseX, mouseY)){
 				hud.getMiniMap().click(mouseX, mouseY, this);
 			}
-			
 			for (Territory t: world.getMap().getTerritories()){
-				
+
 				// This block will determine if the player has clicked one of the territory bases
 				if (t.onScreen(xOffset, yOffset))
 					if (t.onBaseIcon(mouseX, mouseY, xOffset, yOffset)){
@@ -110,8 +124,6 @@ public class WorldState extends BasicGameState {
 						break;
 					}
 			} // End territory for loop
-			
-			
 			if (popupMenu.isActive()){
 				if (popupMenu.getCloseRectangle(xOffset, yOffset).contains(mouseX, mouseY))
 					popupMenu.deselect();
@@ -121,31 +133,68 @@ public class WorldState extends BasicGameState {
 				}
 			}// end popup menu block
 		}  // end left button block
-		
+
 		if (input.isMousePressed(input.MOUSE_RIGHT_BUTTON)){
-			int absoluteMouseX = mouseX + xOffset;
-			int absoluteMouseY = mouseY + yOffset;
-			int tX = absoluteMouseX / Tile.SIZE;
-			int tY = absoluteMouseY / Tile.SIZE;
-			
-			if (tX >= 0 && tX <= 63)
-				if (tY >= 0 && tY <= 63){
-					Tile t = world.getMap().getTiles()[tX][tY];
-					t.setToolTip(toolTip);
-				}
+			Tile t = determineMouseTileLocation(mouseX, mouseY);
+			if (t != null)
+				t.setToolTip(toolTip);
+
+		} // end right click block
+
+
+		if (input.isMouseButtonDown(input.MOUSE_LEFT_BUTTON)){
+			for (Draggable obj: draggables){
+				if (obj.getOffsetShape(xOffset, yOffset).contains(mouseX, mouseY)){
+					if (draggedObject == null){
+						draggedObject = obj;
+						Coordinates objCoord = obj.getCoordinates();
+						draggedObjectOffCoords = new Coordinates(mouseX - objCoord.getX(), mouseY - objCoord.getY());
+						break;
+					}
+					else{
+						draggedObject.drag(draggedObjectOffCoords, mouseX, mouseY);
+					}
+				}	
+			}
 		}
+		else
+			if (draggedObject != null){
+				draggedObject.setDragging(false);
+				draggedObject = null;
+				
+			}
+
+	} // END UPDATE METHOD
 
 
-	}
-	
-	public void setOffsets(int xOff, int yOff){
-		xOffset = xOff;
-		yOffset = yOff;
-	}
 
 	@Override
 	public int getID() {
 		return ID;
 	}
+
+	// ******************************************* General Methods ************************************************************
+	public Tile determineMouseTileLocation(int mouseX, int mouseY){
+		/*
+		 * This method will determine which tile the mouse is over
+		 * If the mouse is in a location without a tile, the method wil return null
+		 */
+		int absoluteMouseX = mouseX + xOffset;
+		int absoluteMouseY = mouseY + yOffset;
+		int tX = absoluteMouseX / Tile.SIZE;
+		int tY = absoluteMouseY / Tile.SIZE;
+
+		// world.getMap().size() call determines the bounds of tile locations, the subtraction of 1 is due to array indices
+		if (tX >= 0 && tX <= world.getMap().getSize() - 1)
+			if (tY >= 0 && tY <= world.getMap().getSize() - 1)
+				return world.getMap().getTiles()[tX][tY];
+		return null;
+	}
+
+	public void setOffsets(int xOff, int yOff){
+		xOffset = xOff;
+		yOffset = yOff;
+	}
+
 
 }

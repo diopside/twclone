@@ -44,14 +44,13 @@ public class Territory {
 
 	public void render(Graphics g, int xOffset, int yOffset){
 		
-		
-
+		// Draw the city or "base"
 		if (baseIcon.getShape(xOffset, yOffset).intersects(Game.SCREEN)){
 			baseIcon.render(g, xOffset, yOffset, owner);
-				
 		}
 		
-		g.setLineWidth(3f);
+		
+		g.setLineWidth(4f);
 		if (owner == null)
 			g.setColor(Faction.NEUTRAL_COLOR);
 		else
