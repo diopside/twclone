@@ -15,6 +15,7 @@ import states.TerritoryState;
 import entities.Coordinates;
 import entities.Draggable;
 import entities.world.Territory;
+import entities.world.World;
 
 public class Menu implements Draggable {
 
@@ -34,11 +35,12 @@ public class Menu implements Draggable {
 	private boolean active; // Active will represent whether or not the menu should be rendered or not
 	private String header;
 	private Territory t;
+	private World world;
 	private boolean dragging;
 
 
 
-	public Menu(String dir, int closeX, int closeY, int closeSize, int headerX, int headerY){
+	public Menu(String dir, int closeX, int closeY, int closeSize, int headerX, int headerY, World world){
 		buttons = new ArrayList<>();
 		initImages(dir);
 		coord = new Coordinates();
@@ -49,6 +51,8 @@ public class Menu implements Draggable {
 		HEADER_SIZE_X = headerX;
 		HEADER_SIZE_Y = headerY;
 		active = false;
+		
+		this.world = world;
 	}
 
 	private void initImages(String dir){
@@ -73,12 +77,14 @@ public class Menu implements Draggable {
 
 	public void selectTerritory(Territory t){
 		this.t = t;
-		final int X_SPACING = 50;
+		final int X_SPACING = 100;
 		coord.setX(t.getX() + X_SPACING);
 		coord.setY(t.getY());
 		header = t.getName();
 		active = true;
-		generateButtons();
+		
+		if (world.getPlayer().getTerritories().contains(t))
+			generateButtons();
 
 		
 	}
@@ -105,7 +111,7 @@ public class Menu implements Draggable {
 			if (b instanceof BasicButton){ // Basic Buttons are clickable, the other ones will not be and will be used to display information
 				if (((BasicButton) b).offsetContains(mouseX, mouseY, xOffset, yOffset)){
 					TerritoryState ts = (TerritoryState) game.getState(Game.TERRITORY_STATE_ID);
-					ts.setTerritory(t);
+					ts.setTerritory(world, t);
 					game.enterState(Game.TERRITORY_STATE_ID);
 				}
 			}
@@ -120,6 +126,7 @@ public class Menu implements Draggable {
 		window.setAlpha(alpha);
 		window.draw(x() - xOffset, y() - yOffset);
 		g.setColor(Color.black);
+		g.setFont(Game.MORRIS_ROMAN_24);
 		g.drawString(header, x() + 5 - xOffset, y() + 5 - yOffset); // The 5's are so the String isn't drawn on the margins of the window
 
 		for (Button b: buttons){

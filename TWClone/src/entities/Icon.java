@@ -37,6 +37,10 @@ public class Icon {
 		return new Rectangle(x - xOffset, y - yOffset, icon.getWidth(), icon.getHeight());
 	}
 	
+	public Image getImage(){
+		return icon;
+	}
+	
 	
 	
 	public void render(Graphics g, int xOffset, int yOffset, Faction f){

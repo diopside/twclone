@@ -44,7 +44,7 @@ public class Region {
 	}
 	
 	public void addTile(Tile t){
-		
+		// The 6 and 4 represent the number of tile types and the number of different tiles for each type respectively
 		t.setID(type + (6 *((int) (Math.random() * 4))));
 		tiles.add(t);
 		

@@ -11,6 +11,7 @@ import org.newdawn.slick.geom.*;
 import states.Game;
 import entities.Faction;
 import entities.Icon;
+import entities.units.Building;
 import gui.OffsetLine;
 
 public class Territory {
@@ -25,6 +26,7 @@ public class Territory {
 	private ArrayList<OffsetLine> border;
 	private int x, y;
 	private ArrayList<Tile> tiles;
+	private ArrayList<Building> buildings;
 	
 	
 
@@ -65,6 +67,10 @@ public class Territory {
 
 	public ArrayList<OffsetLine> getBorder(){
 		return border;
+	}
+	
+	public Icon getIcon(){
+		return baseIcon;
 	}
 	
 	public Faction getOwner(){

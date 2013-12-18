@@ -83,6 +83,16 @@ public class Faction {
 		return name;
 	}
 	
+	public int getGold(){
+		return gold;
+	}
+	public int getWood(){
+		return wood;
+	}
+	public int getMinerals(){
+		return minerals;
+	}
+	
 	
 	public static void initStaticMembers(){
 		try {

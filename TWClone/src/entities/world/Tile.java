@@ -1,5 +1,7 @@
 package entities.world;
 
+import java.util.ArrayList;
+
 import gui.ToolTip;
 import gui.ToolTippable;
 
@@ -108,14 +110,16 @@ public class Tile implements ToolTippable {
 	public void setToolTip(ToolTip tt) {
 		tt.setX(this.x * SIZE + SIZE);
 		tt.setY(this.y * SIZE + SIZE);
-		String message =" \n" + territory.getName();
+		
+		ArrayList<String> message = new ArrayList<>();
+		message.add(territory.getName());
 		switch (id % 6){
-			case 0: message += "\nPlains territory"; break; 
-			case 1: message += "\nForest territory"; break;
-			case 2: message += "\nDesert territory"; break;
-			case 3: message += "\nMarsh territory"; break;
-			case 4: message += "\nTundra territory"; break;
-			case 5: message += "\nMountain territory"; break;
+			case 0: message.add( "\nPlains territory"); break; 
+			case 1: message.add( "\nForest territory"); break;
+			case 2: message.add( "\nDesert territory"); break;
+			case 3: message.add( "\nMarsh territory"); break;
+			case 4: message.add( "\nTundra territory"); break;
+			case 5: message.add( "\nMountain territory"); break;
 		}
 
 

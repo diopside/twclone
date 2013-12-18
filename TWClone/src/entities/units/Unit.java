@@ -21,7 +21,7 @@ public class Unit implements Draggable {
 
 	@Override
 	public Coordinates getCoordinates() {		
-		return null;
+		return coord;
 	}
 
 	

@@ -14,7 +14,7 @@ public class World {
 	private World(Faction[] factions, int year){
 		this.factions = factions;
 		this.year = year;
-		map = new MapShape(64);
+		map = new MapShape(80);
 		giveInitialTerritories();
 
 
@@ -32,7 +32,6 @@ public class World {
 		}
 	}
 
-
 	public void render(Graphics g, int xOffset, int yOffset){
 
 		for (Region r: map.getRegions())
@@ -42,11 +41,6 @@ public class World {
 	}
 
 
-
-
-
-
-
 	//*************************************** Static Methods **********************************************
 	public static World generateWorld(){
 		World world;
@@ -54,7 +48,7 @@ public class World {
 
 		fs[0] = new Faction("Faction-0", "red");
 		fs[1] = new Faction("Faction-1", "yellow");
-		fs[2] = new Faction("Faction-2", "orange");
+		fs[2] = new Faction("Faction-2", "pink");
 		fs[3] = new Faction("Faction-3", "blue");
 
 		world = new World(fs, 500);
@@ -66,9 +60,17 @@ public class World {
 	//********************************************* Getters and Setters ******************************************
 
 
+	public Faction[] getFactions(){
+		return factions;
+	}
 
 	public MapShape getMap(){
 		return map;
 	}
-
+	public int getYear(){
+		return year;
+	}
+	public Faction getPlayer(){
+		return factions[0];
+	}
 }

@@ -143,7 +143,7 @@ public class MapShape {
 			for (int i = 0; i < numWithSeeds; i ++)
 				if (i != numWithSeeds){
 					Tile otherTile = territoryTiles.get(i).get(0);// test against the other cities to ensure it isn't too close
-					if (otherTile.distance(tile) < 6.5f){
+					if (otherTile.distance(tile) < 5f){
 						validTile = false;
 						break;
 					}

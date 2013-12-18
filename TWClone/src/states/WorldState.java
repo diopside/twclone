@@ -49,10 +49,10 @@ public class WorldState extends BasicGameState {
 	public void init(GameContainer container, StateBasedGame game)
 			throws SlickException {
 		world = World.generateWorld();
-		hud = new Hud();
+		hud = new Hud(world);
 		hud.getMiniMap().setInformation(world.getMap().getTiles(), world.getMap().getSize());
-		popupMenu = new Menu("res/menus/popupmenu.png", 129, 2, 29, 127, 32); // the last 5 are the image specific locations of the close box and top bar
-		toolTip = new ToolTip(0, 0, "");
+		popupMenu = new Menu("res/menus/popupmenu.png", 129, 2, 29, 127, 32, world); // the last 5 are the image specific locations of the close box and top bar
+		toolTip = new ToolTip(0, 0, new ArrayList<String>());
 		draggables = new ArrayList<>();
 		draggables.add(popupMenu);
 		draggables.add(toolTip);
@@ -72,9 +72,9 @@ public class WorldState extends BasicGameState {
 		hud.render(g);
 		hud.getMiniMap().render(g, xOffset, yOffset);
 
-		if (toolTip.isActive()){
+		if (toolTip.isActive())
 			toolTip.render(g, xOffset, yOffset);
-		}
+		
 	} // END RENDER METHOD
 
 	@Override
@@ -163,6 +163,12 @@ public class WorldState extends BasicGameState {
 				draggedObject = null;
 				
 			}
+		
+		if (input.isKeyPressed(input.KEY_P)){
+			System.out.println("Territories - " + world.getMap().getTerritories().length);
+			System.out.println("Regions - " + world.getMap().getRegions().size());
+			System.out.println("Factions - " + world.getFactions().length);
+		}
 
 	} // END UPDATE METHOD
 
@@ -194,6 +200,10 @@ public class WorldState extends BasicGameState {
 	public void setOffsets(int xOff, int yOff){
 		xOffset = xOff;
 		yOffset = yOff;
+	}
+	
+	public World getWorld(){
+		return this.world;
 	}
 
 
