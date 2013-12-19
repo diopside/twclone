@@ -72,11 +72,13 @@ public class WorldState extends BasicGameState {
 		if (popupMenu.isActive())
 			popupMenu.render(g, xOffset, yOffset);
 
+		if (toolTip.isActive())
+			toolTip.render(g, xOffset, yOffset);
+		
 		hud.render(g);
 		hud.getMiniMap().render(g, xOffset, yOffset);
 
-		if (toolTip.isActive())
-			toolTip.render(g, xOffset, yOffset);
+		
 		
 	} // END RENDER METHOD
 
@@ -168,6 +170,7 @@ public class WorldState extends BasicGameState {
 			}
 		
 		if (input.isKeyPressed(input.KEY_P)){
+			// This will be used just to display information for me 
 			System.out.println("Territories - " + world.getMap().getTerritories().length);
 			System.out.println("Regions - " + world.getMap().getRegions().size());
 			System.out.println("Factions - " + world.getFactions().length);
@@ -175,11 +178,8 @@ public class WorldState extends BasicGameState {
 			for (Integer i: FPS)
 				totalFPS += i;
 			totalFPS /= FPS.size();
+			// poor mans average fps
 			System.out.println("FPS: "+totalFPS);
-		}
-		
-		if (input.isKeyPressed(input.KEY_O)){
-			System.out.println(xOffset + "    -    " + yOffset);
 		}
 		
 		FPS.add(container.getFPS());

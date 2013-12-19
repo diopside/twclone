@@ -20,6 +20,7 @@ public class World {
 
 	}
 	private void giveInitialTerritories(){
+		// Currently this method gives each faction two random territories
 		for (Faction f: factions)
 			while (f.getTerritories().size() < 2){
 				Territory t = map.getTerritories()[(int)(Math.random() * map.getTerritories().length)];
@@ -33,8 +34,6 @@ public class World {
 	public void render(Graphics g, int xOffset, int yOffset){
 
 		renderTiles(g, xOffset, yOffset);
-		//for (Region r: map.getRegions())
-			//r.render(g, xOffset, yOffset);
 		for (Territory t: map.getTerritories())
 			t.render(g, xOffset, yOffset);
 	}
@@ -45,9 +44,12 @@ public class World {
 		int tX = determineTileRenderStart(xOffset, TOTAL_X);
 		int tY = determineTileRenderStart(yOffset, TOTAL_Y);
 		
+		// where to start rendering on the screen, if you are rendering off the low boundary (negative offsets) you need to render starting further positive
+		// namely the absolute value of the offset(s)
 		int renderStartX = xOffset < 0 ? -1 * xOffset : - (xOffset % Tile.SIZE);
 		int renderStartY = yOffset < 0 ? -1 * yOffset : - (yOffset % Tile.SIZE);
 		
+		// if you are rendering too far to the positive side of the array you must render fewer overall tiles to prevent overflow or drawing the wrong tiles
 		int maxX = tX + TOTAL_X >= map.getSize() ? map.getSize() - tX : TOTAL_X;
 		int maxY = tY + TOTAL_Y >= map.getSize() ? map.getSize() - tY : TOTAL_Y;
 		
@@ -61,7 +63,6 @@ public class World {
 		int start = offset / Tile.SIZE;
 		if (start < 0)
 			start = 0;
-		
 		return start;
 	}
 

@@ -166,7 +166,9 @@ public class Menu implements Draggable {
 		coord.setY(dy);
 		
 		buttons.clear();
-		generateButtons();
+		
+		if (world.getPlayer().getTerritories().contains(t))
+			generateButtons();
 	}
 
 
