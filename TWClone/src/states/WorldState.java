@@ -38,6 +38,7 @@ public class WorldState extends BasicGameState {
 	private ArrayList<Draggable> draggables;
 	private Draggable draggedObject;
 	private Coordinates draggedObjectOffCoords;
+	private ArrayList<Integer> FPS;
 
 
 	//**************************** Constructors and Initialization Methods ***********************************************
@@ -56,6 +57,8 @@ public class WorldState extends BasicGameState {
 		draggables = new ArrayList<>();
 		draggables.add(popupMenu);
 		draggables.add(toolTip);
+		
+		FPS = new ArrayList<>();
 	}
 
 
@@ -168,7 +171,18 @@ public class WorldState extends BasicGameState {
 			System.out.println("Territories - " + world.getMap().getTerritories().length);
 			System.out.println("Regions - " + world.getMap().getRegions().size());
 			System.out.println("Factions - " + world.getFactions().length);
+			long totalFPS = 0;
+			for (Integer i: FPS)
+				totalFPS += i;
+			totalFPS /= FPS.size();
+			System.out.println("FPS: "+totalFPS);
 		}
+		
+		if (input.isKeyPressed(input.KEY_O)){
+			System.out.println(xOffset + "    -    " + yOffset);
+		}
+		
+		FPS.add(container.getFPS());
 
 	} // END UPDATE METHOD
 

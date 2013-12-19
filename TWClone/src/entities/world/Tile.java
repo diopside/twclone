@@ -47,6 +47,10 @@ public class Tile implements ToolTippable {
 			tiles[id].draw(x * SIZE - xOffset, y * SIZE - yOffset);
 		}
 	}
+	
+	public void render(int x, int y){
+		tiles[id].draw(x, y);
+	}
 
 	public Rectangle getRectangle(int xOffset, int yOffset){
 		return new Rectangle(x * SIZE - xOffset, y * SIZE - yOffset, SIZE, SIZE);
