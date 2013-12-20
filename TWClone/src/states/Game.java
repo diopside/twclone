@@ -42,8 +42,7 @@ public class Game extends StateBasedGame{
 	//State IDs
 	public static final int MAIN_MENU_STATE_ID = 0, WORLD_STATE_ID = 1, EMPIRE_STATE_ID = 2, TERRITORY_STATE_ID = 3, OPTIONS_STATE_ID = 4, TEST_STATE_ID = 5;
 	public static TrueTypeFont MORRIS_ROMAN_18, MORRIS_ROMAN_24;
-	public static Image CURSOR;
-	
+	public static Image CURSOR, BACKGROUND_1, BACKGROUND_2;
 	
 	
 	public Game(String name) {
@@ -93,6 +92,9 @@ public class Game extends StateBasedGame{
 		initFonts();
 		CURSOR = new Image("res/cursor.png");
 		container.setMouseCursor(CURSOR, 1, 1);
+		
+		BACKGROUND_1 = new Image("res/background1.png");
+		BACKGROUND_2 = new Image("res/background2.png");
 		
 	}
 	

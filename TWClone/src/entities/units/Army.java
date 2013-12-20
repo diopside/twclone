@@ -1,7 +1,6 @@
 package entities.units;
 
 import java.util.ArrayList;
-import java.util.PriorityQueue;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
@@ -23,14 +22,16 @@ public class Army extends Unit{
 
 	private Leader leader;
 	private ArrayList<Division> troops;
-	private PriorityQueue<Coordinates> path;
 	private Image image;
 
-	public Army(int tX, int tY, Faction faction, String dir){
+	public Army(Tile t, Faction faction, String dir, int armyNum){
 
-		this.coord = new Coordinates(tX, tY); // Tile based coordinates
+		this.name = "Army " + armyNum;
+		this.coord = new Coordinates(t.getX(), t.getY()); // Tile based coordinates
 		this.owner = faction;
-
+		path = new ArrayList<>();
+		
+		t.setOccupyingEntity(this);
 		initImage(dir);
 	}
 
@@ -42,20 +43,10 @@ public class Army extends Unit{
 		}
 	}
 
-
-
-
-	public void setDestination(int tX, int tY){
-		path = PathGenerator.generatePath(x(), y(), tX, tY);
-	}
-
-	public void setDestination(Tile destination){
-		path = PathGenerator.generatePath(x(), y(), destination.getX(), destination.getY());
-	}
-
 	@Override
 	public void drag(Coordinates offCoords, int mouseX, int mouseY) {
 		// Currently nothing, call a setDestination() method to create a path to the tile
+		
 	}
 
 

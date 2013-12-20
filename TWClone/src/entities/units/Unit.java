@@ -1,29 +1,30 @@
 package entities.units;
 
+import java.util.ArrayList;
+
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Shape;
 
 import entities.Coordinates;
 import entities.Draggable;
+import entities.Entity;
 import entities.Faction;
+import entities.PathGenerator;
 import entities.world.Territory;
+import entities.world.Tile;
 
-abstract public class Unit implements Draggable {
+abstract public class Unit extends Entity implements Draggable {
 
-	protected Territory location;
-	protected Coordinates coord;
-	protected Faction owner;
+	protected String name;
 	protected boolean dragging;
 	protected int maxMovement, movementUsed;
 	protected int lineOfSight;
+	protected ArrayList<Tile> path;
+	
 
 	@Override
 	abstract public Shape getOffsetShape(int mouseX, int mouseY);
 	
-	@Override
-	public Coordinates getCoordinates() {		
-		return coord;
-	}
 
 	@Override
 	public void setDragging(boolean b) {
@@ -38,12 +39,23 @@ abstract public class Unit implements Draggable {
 	abstract public void render(Graphics g, int xOffset, int yOffset, int mouseX, int mouseY);
 		
 	
-	protected int x(){
-		return coord.getX();
+	public String getName(){
+		return this.name;
 	}
 	
-	protected int y(){
-		return coord.getY();
+	public void setDestination(Tile destination){
+		
+		
+		if (destination == null)
+			return;
+		// this return is called so that a current path is preserved if the player drops the army back in its own territory
+		if (destination.getX() == coord.getX() && destination.getY() == coord.getY())
+			return;
+		
+		path = PathGenerator.generatePath(coord, destination);
 	}
 	
+	public ArrayList<Tile> getPath(){
+		return path;
+	}
 }

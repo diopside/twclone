@@ -47,6 +47,9 @@ public class WorldState extends BasicGameState {
 	private Coordinates draggedObjectOffCoords;
 
 
+	// The following variables will be used in displaying information regarding selected units on the HUD
+	private Unit selectedUnit;
+
 
 	//**************************** Constructors and Initialization Methods ***********************************************
 	public WorldState(int id){
@@ -73,7 +76,8 @@ public class WorldState extends BasicGameState {
 	public void render(GameContainer container, StateBasedGame game,
 			Graphics g) throws SlickException {
 
-		g.setBackground(Color.blue);
+		
+		Game.BACKGROUND_2.draw();
 		world.render(g, xOffset, yOffset);
 
 		if (draggedObject != null && draggedObject instanceof Army){
@@ -82,13 +86,20 @@ public class WorldState extends BasicGameState {
 			if (t != null){
 				int tX = t.getX();
 				int tY = t.getY();
-				g.setColor(Color.black);
 				g.draw(new Rectangle(tX * Tile.SIZE - xOffset, tY * Tile.SIZE - yOffset, Tile.SIZE, Tile.SIZE));
 			}
 		}
 		
+		if (selectedUnit != null){
+			for (Tile c: selectedUnit.getPath()){
+				
+				g.setColor(Color.pink);
+				g.draw(c.getRectangle(xOffset, yOffset));
+			}
+		}
+
 		renderUnits(g);
-		
+
 
 		if (popupMenu.isActive())
 			popupMenu.render(g, xOffset, yOffset);
@@ -98,8 +109,8 @@ public class WorldState extends BasicGameState {
 
 		hud.render(g);
 		hud.getMiniMap().render(g, xOffset, yOffset);
-		
-		
+
+
 
 
 
@@ -146,28 +157,7 @@ public class WorldState extends BasicGameState {
 
 		//****************************************
 		if (input.isMousePressed(input.MOUSE_LEFT_BUTTON)){
-			if (hud.getMiniMap().getRectangle().contains(mouseX, mouseY)){
-				hud.getMiniMap().click(mouseX, mouseY, this);
-			}
-			for (Territory t: world.getMap().getTerritories()){
-
-				// This block will determine if the player has clicked one of the territory bases
-				if (t.onScreen(xOffset, yOffset))
-					if (t.onBaseIcon(mouseX, mouseY, xOffset, yOffset)){
-						if (popupMenu.isActive())
-							popupMenu.deselect();
-						popupMenu.selectTerritory(t);
-						break;
-					}
-			} // End territory for loop
-			if (popupMenu.isActive()){
-				if (popupMenu.getCloseRectangle(xOffset, yOffset).contains(mouseX, mouseY))
-					popupMenu.deselect();
-				else {
-					// This will test to see if any menu button was selected, currently the only one is the button to enter the territory screen.
-					popupMenu.checkButtons(mouseX, mouseY, xOffset, yOffset, game);
-				}
-			}// end popup menu block
+			handleLeftClick(input, game);
 		}  // end left button block
 
 		if (input.isMousePressed(input.MOUSE_RIGHT_BUTTON)){
@@ -184,9 +174,18 @@ public class WorldState extends BasicGameState {
 		else
 			if (draggedObject != null){
 				draggedObject.setDragging(false);
+				if (draggedObject instanceof Unit){
+					((Unit) draggedObject).setDestination(determineMouseTileLocation());
+				}
 				draggedObject = null;
 
 			}
+		
+		if (input.isKeyPressed(input.KEY_SPACE)){
+			selectedUnit = null;
+			hud.select(null);
+		}
+		
 
 		if (input.isKeyPressed(input.KEY_P)){
 			// This will be used just to display information for me 
@@ -194,7 +193,7 @@ public class WorldState extends BasicGameState {
 			System.out.println("Regions - " + world.getMap().getRegions().size());
 			System.out.println("Factions - " + world.getFactions().length);
 
-			Army army = new Army(10, 10, world.getPlayer(), "res/armies/" + world.getPlayer().getColorName() + ".png");
+			Army army = new Army(world.getMap().getTiles()[10][10], world.getPlayer(), "res/armies/" + world.getPlayer().getColorName() + ".png", world.getPlayer().getArmies().size() + 1);
 			world.getPlayer().addArmy(army);
 		}
 
@@ -202,10 +201,58 @@ public class WorldState extends BasicGameState {
 
 	} // END UPDATE METHOD
 
+	//********************************************************
+
+	private void handleLeftClick(Input input, StateBasedGame game){
+		if (hud.getMiniMap().getRectangle().contains(mouseX, mouseY)){
+			hud.getMiniMap().click(mouseX, mouseY, this);
+		}
+
+
+		else if (popupMenu.isActive()){
+			if (popupMenu.getCloseRectangle(xOffset, yOffset).contains(mouseX, mouseY)){
+
+				popupMenu.deselect();
+			}
+			else {
+				// This will test to see if any menu button was selected, currently the only one is the button to enter the territory screen.
+				popupMenu.checkButtons(mouseX, mouseY, xOffset, yOffset, game);
+			}
+		}// end popup menu block
+
+
+		else{
+
+			for (Territory t: world.getMap().getTerritories()){
+
+				// This block will determine if the player has clicked one of the territory bases
+				if (t.onScreen(xOffset, yOffset))
+					if (t.onBaseIcon(mouseX, mouseY, xOffset, yOffset)){
+						if (popupMenu.isActive())
+							popupMenu.deselect();
+						popupMenu.selectTerritory(t);
+						return;
+					}
+			} // End territory for loop
+
+			for (Faction f: world.getFactions())
+				for (Unit u: f.getUnits())
+					if (u.getOffsetShape(xOffset, yOffset).contains(mouseX, mouseY)){
+						selectUnit(u);
+						return;
+					}
+
+		}
+	}
+
+	//*************************************************************
+
 	private void handleDragging(Input input){
 
-		if (draggedObject != null)
+		if (draggedObject != null){
 			draggedObject.drag(draggedObjectOffCoords, mouseX, mouseY);
+			
+		}
 		else{
 			for (Draggable obj: draggables){
 				if (obj.getOffsetShape(xOffset, yOffset).contains(mouseX, mouseY)){
@@ -273,6 +320,16 @@ public class WorldState extends BasicGameState {
 	public World getWorld(){
 		return this.world;
 	}
+	
+	public void selectUnit(Unit u){
+		hud.select(u);
+		selectedUnit = u;
+	}
 
 
 }
+
+
+
+
+

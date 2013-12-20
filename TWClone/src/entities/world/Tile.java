@@ -2,6 +2,7 @@ package entities.world;
 
 import java.util.ArrayList;
 
+import entities.Entity;
 import gui.ToolTip;
 import gui.ToolTippable;
 
@@ -20,6 +21,7 @@ public class Tile implements ToolTippable {
 
 	private int id, x, y;
 	private Territory territory;
+	private Entity occupyingEntity;
 
 	public Tile(int x, int y, int id){
 		this.x = x;
@@ -34,6 +36,12 @@ public class Tile implements ToolTippable {
 
 
 
+	public void setOccupyingEntity(Entity e){
+		occupyingEntity = e;
+	}
+	public boolean occupied(){
+		return occupyingEntity != null;
+	}
 
 	public void setTerritory(Territory t){
 		territory = t;
@@ -45,11 +53,19 @@ public class Tile implements ToolTippable {
 	public void render(Graphics g, int xOffset, int yOffset){
 		if (getRectangle(xOffset, yOffset).intersects(Game.SCREEN)){
 			tiles[id].draw(x * SIZE - xOffset, y * SIZE - yOffset);
+			if (occupied()){
+				g.setColor(Color.pink);
+				g.draw(getRectangle(xOffset, yOffset));
+			}
 		}
 	}
 	
-	public void render(int x, int y){
+	public void render(int x, int y, Graphics g, int xOffset, int yOffset){
 		tiles[id].draw(x, y);
+		if (occupied()){
+			g.setColor(Color.pink);
+			g.draw(getRectangle(xOffset, yOffset));
+		}
 	}
 
 	public Rectangle getRectangle(int xOffset, int yOffset){
@@ -77,6 +93,8 @@ public class Tile implements ToolTippable {
 		// this will be used by the minimap
 		return id % 6;
 	}
+	
+	
 
 
 	public static void initTiles(){

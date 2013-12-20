@@ -15,7 +15,7 @@ public class World {
 	private World(Faction[] factions, int year){
 		this.factions = factions;
 		this.year = year;
-		map = new MapShape(100);
+		map = new MapShape(64);
 		giveInitialTerritories();
 
 
@@ -61,7 +61,7 @@ public class World {
 		
 		for (int x = 0; x < maxX; x ++)
 			for (int y = 0; y < maxY; y ++)
-				map.getTiles()[x + tX][y + tY].render(renderStartX + x * Tile.SIZE, renderStartY + y * Tile.SIZE);
+				map.getTiles()[x + tX][y + tY].render(renderStartX + x * Tile.SIZE, renderStartY + y * Tile.SIZE, g, xOffset, yOffset);
 			
 	}
 	

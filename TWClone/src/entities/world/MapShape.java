@@ -1,5 +1,6 @@
 package entities.world;
 
+import entities.PathGenerator;
 import gui.OffsetLine;
 
 import java.util.ArrayList;
@@ -119,7 +120,9 @@ public class MapShape {
 
 		// Regions are now successfully created, time to create the territories in a similar manner
 
+		PathGenerator.setTiles(tiles, size);
 		generateTerritorySeeds();
+		
 	}
 
 	private void generateTerritorySeeds(){
@@ -159,6 +162,7 @@ public class MapShape {
 		for (int i = 0; i < territories.length; i ++){
 			territories[i] = new Territory(territoryTiles.get(i), (short) i);
 			territoryTiles.get(i).get(0).setTerritory(territories[i]);
+			territories[i].initIcon();
 		}
 
 		growTerritorySeeds(assigned);

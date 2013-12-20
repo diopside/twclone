@@ -8,8 +8,9 @@ import org.newdawn.slick.geom.Shape;
 
 import entities.units.Unit;
 import entities.world.Territory;
+import entities.world.Tile;
 
-public class Icon {
+public class Icon extends Entity {
 
 	
 	/*
@@ -17,12 +18,18 @@ public class Icon {
 	 */
 	
 	private Image icon;
-	private int x, y;
 	
-	public Icon(String dir, int x, int y){
+	public Icon(String dir, int x, int y, Faction owner){
 		initImage(dir);
-		this.x = x;
-		this.y = y;
+		coord = new Coordinates(x, y);
+		this.owner = owner;
+	}
+	
+	public Icon(String dir, Tile t){
+		initImage(dir);
+		coord = new Coordinates(t.getX(), t.getY());
+		this.owner = t.getTerritory().getOwner();
+		t.setOccupyingEntity(this);
 	}
 	
 	private void initImage(String dir){
@@ -33,8 +40,12 @@ public class Icon {
 		}
 	}
 	
+	public void setOwner(Faction f){
+		this.owner = f;
+	}
+	
 	public Shape getShape(int xOffset, int yOffset){
-		return new Rectangle(x - xOffset, y - yOffset, icon.getWidth(), icon.getHeight());
+		return new Rectangle(x() * Tile.SIZE - xOffset, y() * Tile.SIZE - yOffset, icon.getWidth(), icon.getHeight());
 	}
 	
 	public Image getImage(){
@@ -44,12 +55,12 @@ public class Icon {
 	
 	
 	public void render(Graphics g, int xOffset, int yOffset, Faction f){
-		icon.draw(x - xOffset, y - yOffset);
+		icon.draw(x() * Tile.SIZE - xOffset, y() * Tile.SIZE - yOffset);
 		if (f == null){
-			f.NEUTRAL_FLAG.draw(x-xOffset + icon.getWidth()/2f, y - f.NEUTRAL_FLAG.getHeight() - yOffset); 
+			f.NEUTRAL_FLAG.draw(x() * Tile.SIZE-xOffset + icon.getWidth()/2f, y() * Tile.SIZE - f.NEUTRAL_FLAG.getHeight() - yOffset); 
 		}
 		else {
-			f.getFlag().draw(x-xOffset + icon.getWidth()/2f, y - f.NEUTRAL_FLAG.getHeight() - yOffset);
+			f.getFlag().draw(x() * Tile.SIZE-xOffset + icon.getWidth()/2f, y() * Tile.SIZE - f.NEUTRAL_FLAG.getHeight() - yOffset);
 		}
 	}
 	

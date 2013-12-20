@@ -67,7 +67,7 @@ public class TerritoryState extends BasicGameState {
 				// Get the tile, and then draw a tile corresponding to its type on the sub window
 				Tile.tiles[tiles[tX + i][tY + j].getType()].draw(SUB_WINDOW_MARGIN + i * Tile.SIZE, SUB_WINDOW_MARGIN + j * Tile.SIZE);
 				
-				// test if the tile in question is where the base is located, if that is where the base is located draw it on top of the tile
+				// test if the tile in question is where the base is located, draw the base on top of the tile
 				if (tiles[tX + i][tY + j].getY() == territory.getTiles().get(0).getY() && tiles[tX + i][tY + j].getX() == territory.getTiles().get(0).getX())
 					territory.getIcon().getImage().draw(SUB_WINDOW_MARGIN + i * Tile.SIZE, SUB_WINDOW_MARGIN + j * Tile.SIZE);
 			}

@@ -12,6 +12,7 @@ import states.Game;
 import entities.Coordinates;
 import entities.Faction;
 import entities.Icon;
+import entities.units.Army;
 import entities.units.Building;
 import gui.OffsetLine;
 
@@ -25,10 +26,10 @@ public class Territory {
 	private int populaltion;
 	private Icon baseIcon;
 	private ArrayList<OffsetLine> border;
-	private int x, y;
 	private ArrayList<Tile> tiles;
 	private ArrayList<Building> buildings;
 	private Rectangle maximumBoundaries;
+	private Army garrison;
 
 
 
@@ -38,12 +39,13 @@ public class Territory {
 		ID = id;
 		owner = null;
 		type = (int) (Math.random() * 6);
-		this.x = tiles.get(0).getX() * Tile.SIZE;
-		this.y = tiles.get(0).getY() * Tile.SIZE;
-		baseIcon = new Icon("res/icons/castle.png", x, y);
 		this.tiles = tiles;
 		border = new ArrayList<>();
 
+	}
+	
+	public void initIcon(){
+		baseIcon = new Icon("res/icons/castle.png", tiles.get(0));
 	}
 
 	public void render(Graphics g, int xOffset, int yOffset){
@@ -103,6 +105,7 @@ public class Territory {
 
 	public void setOwner(Faction f){
 		this.owner = f;
+		this.baseIcon.setOwner(f);
 	}
 	public boolean onScreen(int xOffset, int yOffset){
 		return baseIcon.getShape(xOffset, yOffset).intersects(Game.SCREEN);
@@ -124,12 +127,6 @@ public class Territory {
 		return "Territory-"+ID;
 	}
 
-	public int getX(){
-		return x;
-	}
-	public int getY(){
-		return y;
-	}
 
 	public ArrayList<Tile> getTiles(){
 		return this.tiles;

@@ -109,6 +109,11 @@ public class Faction {
 		return minerals;
 	}
 	
+	public ArrayList<Unit> getUnits(){
+		ArrayList<Unit> units = new ArrayList<>();
+		units.addAll(armies);
+		return units;
+	}
 	
 	public static void initStaticMembers(){
 		try {

@@ -15,6 +15,7 @@ import states.TerritoryState;
 import entities.Coordinates;
 import entities.Draggable;
 import entities.world.Territory;
+import entities.world.Tile;
 import entities.world.World;
 
 public class Menu implements Draggable {
@@ -78,8 +79,8 @@ public class Menu implements Draggable {
 	public void selectTerritory(Territory t){
 		this.t = t;
 		final int X_SPACING = 100;
-		coord.setX(t.getX() + X_SPACING);
-		coord.setY(t.getY());
+		coord.setX(t.getIcon().getCoordinates().getX() * Tile.SIZE + X_SPACING);
+		coord.setY(t.getIcon().getCoordinates().getY() * Tile.SIZE);
 		header = t.getName();
 		active = true;
 		
