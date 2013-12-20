@@ -35,7 +35,9 @@ public class BasicButton extends Button {
 	}
 
 	@Override
-	public void render(Graphics g, int xOffset, int yOffset) {
+	public void render(Graphics g, int xOffset, int yOffset, float alpha) {
+		
+		image.setAlpha(alpha);
 		image.draw(x - xOffset, y - yOffset);
 
 	}

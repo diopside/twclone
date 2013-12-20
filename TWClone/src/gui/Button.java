@@ -21,6 +21,6 @@ abstract class Button {
 		this.y = y;
 	}
 	
-	public abstract void render(Graphics g, int xOffset, int yOffset);
+	public abstract void render(Graphics g, int xOffset, int yOffset, float alpha);
 	
 }

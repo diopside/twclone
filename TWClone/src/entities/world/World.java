@@ -3,6 +3,7 @@ package entities.world;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Rectangle;
 
+import states.Game;
 import entities.Faction;
 
 public class World {
@@ -14,7 +15,7 @@ public class World {
 	private World(Faction[] factions, int year){
 		this.factions = factions;
 		this.year = year;
-		map = new MapShape(80);
+		map = new MapShape(100);
 		giveInitialTerritories();
 
 
@@ -32,10 +33,15 @@ public class World {
 	}
 
 	public void render(Graphics g, int xOffset, int yOffset){
+		
+		Rectangle offsetScreen = new Rectangle(xOffset, yOffset, Game.WIDTH, Game.HEIGHT);
 
 		renderTiles(g, xOffset, yOffset);
+		
+		
 		for (Territory t: map.getTerritories())
-			t.render(g, xOffset, yOffset);
+			if (t.getMaximumBoundaries().intersects(offsetScreen))
+				t.render(g, xOffset, yOffset);
 	}
 
 	private void renderTiles(Graphics g, int xOffset, int yOffset){

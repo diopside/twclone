@@ -130,7 +130,7 @@ public class Menu implements Draggable {
 		g.drawString(header, x() + 5 - xOffset, y() + 5 - yOffset); // The 5's are so the String isn't drawn on the margins of the window
 
 		for (Button b: buttons){
-			b.render(g, xOffset, yOffset);
+			b.render(g, xOffset, yOffset, alpha/2f);
 		}
 	}
 

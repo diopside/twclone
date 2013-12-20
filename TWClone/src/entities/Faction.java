@@ -3,6 +3,7 @@ package entities;
 import java.util.ArrayList;
 
 import org.newdawn.slick.Color;
+import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
@@ -23,6 +24,7 @@ public class Faction {
 	private String name;
 	private Image flag; // This will represent the coat of arms, or flag of the faction
 	private Color color;
+	private String colorName;
 	
 	
 	public Faction(String name, String color){
@@ -32,6 +34,7 @@ public class Faction {
 		gold = food = wood = minerals = 100;
 		this.name = name;
 		setColor(color);
+		colorName = color;
 		
 		initImages(color);
 	}
@@ -41,6 +44,10 @@ public class Faction {
 		} catch (SlickException exception) {
 			exception.printStackTrace();
 		}
+	}
+	
+	public String getColorName(){
+		return colorName;
 	}
 	private void setColor(String color){
 		switch(color){
@@ -58,10 +65,19 @@ public class Faction {
 	}
 	
 	
+	public void renderArmies(Graphics g, int xOffset, int yOffset, int mouseX, int mouseY){
+		for (Army army: armies)
+			army.render(g, xOffset, yOffset, mouseX, mouseY);
+	}
 	
 	
+	public ArrayList<Army> getArmies(){
+		return armies;
+	}
 	
-	
+	public void addArmy(Army army){
+		armies.add(army);
+	}
 	
 	public void addTerritory(Territory t){
 		territories.add(t);

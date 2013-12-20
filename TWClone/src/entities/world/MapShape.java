@@ -186,8 +186,11 @@ public class MapShape {
 		for (Territory t: territories){
 			for (Tile tile: t.getTiles()){
 				setBorders(tile, t);
+				t.createMaximumBoundaries();
 			}
 		}
+		
+	
 		
 	}
 	

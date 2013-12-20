@@ -3,6 +3,8 @@ package gui;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Line;
 
+import entities.Coordinates;
+
 public class OffsetLine extends Line {
 	
 	private float x1, x2, y1, y2;
@@ -20,4 +22,11 @@ public class OffsetLine extends Line {
 		return new Line(x1 - xOffset, y1 - yOffset, x2 -xOffset, y2 - yOffset);
 	}
 	
+	
+	public Coordinates getPoint1(){
+		return new Coordinates(x1, y1);
+	}
+	public Coordinates getPoint2(){
+		return new Coordinates(x2, y2);
+	}
 }
