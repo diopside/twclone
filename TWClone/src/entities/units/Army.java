@@ -68,12 +68,10 @@ public class Army extends Unit{
 	public void render(Graphics g, int xOffset, int yOffset, int mouseX,
 			int mouseY) {
 		
-		g.setColor(Color.cyan);
-		g.draw(getOffsetShape(xOffset, yOffset));
-		if (getOffsetShape(xOffset, yOffset).intersects(Game.SCREEN)){
+		if (getOffsetShape(xOffset, yOffset).intersects(Game.SCREEN) || dragging){
 			if (dragging){
 				image.setAlpha(.75f);
-				image.draw(mouseX + xOffset, mouseY + yOffset, image.getWidth(), image.getHeight());
+				image.draw(mouseX, mouseY, image.getWidth(), image.getHeight());
 			}
 			else{
 				image.setAlpha(1f);

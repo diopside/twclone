@@ -7,6 +7,7 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
@@ -37,14 +38,14 @@ public class WorldState extends BasicGameState {
 	private Hud hud;
 	private Menu popupMenu;
 	private ToolTip toolTip;
-	
+
 	private int mouseX, mouseY;
 
 	// The following variables will be used in dragging objects around the world
 	private ArrayList<Draggable> draggables;
 	private Draggable draggedObject;
 	private Coordinates draggedObjectOffCoords;
-	
+
 
 
 	//**************************** Constructors and Initialization Methods ***********************************************
@@ -63,7 +64,7 @@ public class WorldState extends BasicGameState {
 		draggables = new ArrayList<>();
 		draggables.add(popupMenu);
 		draggables.add(toolTip);
-		
+
 	}
 
 
@@ -74,24 +75,38 @@ public class WorldState extends BasicGameState {
 
 		g.setBackground(Color.blue);
 		world.render(g, xOffset, yOffset);
+
+		if (draggedObject != null && draggedObject instanceof Army){
+			// in the case of the player dragging an army it is desired to show the player exactly which tile the army is above at the moment.
+			Tile t = determineMouseTileLocation();
+			if (t != null){
+				int tX = t.getX();
+				int tY = t.getY();
+				g.setColor(Color.black);
+				g.draw(new Rectangle(tX * Tile.SIZE - xOffset, tY * Tile.SIZE - yOffset, Tile.SIZE, Tile.SIZE));
+			}
+		}
 		
 		renderUnits(g);
 		
+
 		if (popupMenu.isActive())
 			popupMenu.render(g, xOffset, yOffset);
 
 		if (toolTip.isActive())
 			toolTip.render(g, xOffset, yOffset);
-		
+
 		hud.render(g);
 		hud.getMiniMap().render(g, xOffset, yOffset);
+		
+		
 
-		
-		
+
+
 	} // END RENDER METHOD
-	
+
 	private void renderUnits(Graphics g){
-		
+
 		for (Faction f: world.getFactions()){
 			f.renderArmies(g, xOffset, yOffset, mouseX, mouseY);
 		}
@@ -102,7 +117,8 @@ public class WorldState extends BasicGameState {
 			throws SlickException {
 
 		Input input = container.getInput();
-		mouseX = input.getMouseX(); int mouseY = input.getMouseY();
+		mouseX = input.getMouseX(); 
+		mouseY = input.getMouseY();
 
 
 		/*
@@ -155,7 +171,7 @@ public class WorldState extends BasicGameState {
 		}  // end left button block
 
 		if (input.isMousePressed(input.MOUSE_RIGHT_BUTTON)){
-			Tile t = determineMouseTileLocation(mouseX, mouseY);
+			Tile t = determineMouseTileLocation();
 			if (t != null)
 				t.setToolTip(toolTip);
 
@@ -163,63 +179,66 @@ public class WorldState extends BasicGameState {
 
 
 		if (input.isMouseButtonDown(input.MOUSE_LEFT_BUTTON)){
-			checkUnitsForDragging();
-			
-			for (Draggable obj: draggables){
-				if (obj.getOffsetShape(xOffset, yOffset).contains(mouseX, mouseY)){
-					if (draggedObject == null){
-						draggedObject = obj;
-						draggedObject.setDragging(true);
-						Coordinates objCoord = obj.getCoordinates();
-						draggedObjectOffCoords = new Coordinates(mouseX - objCoord.getX(), mouseY - objCoord.getY());
-						break;
-					}
-					else{
-						draggedObject.drag(draggedObjectOffCoords, mouseX, mouseY);
-					}
-				}	
-			}
+			handleDragging(input);
 		}
 		else
 			if (draggedObject != null){
 				draggedObject.setDragging(false);
 				draggedObject = null;
-				
+
 			}
-		
+
 		if (input.isKeyPressed(input.KEY_P)){
 			// This will be used just to display information for me 
 			System.out.println("Territories - " + world.getMap().getTerritories().length);
 			System.out.println("Regions - " + world.getMap().getRegions().size());
 			System.out.println("Factions - " + world.getFactions().length);
-			
+
 			Army army = new Army(10, 10, world.getPlayer(), "res/armies/" + world.getPlayer().getColorName() + ".png");
 			world.getPlayer().addArmy(army);
 		}
-		
-		
+
+
 
 	} // END UPDATE METHOD
+
+	private void handleDragging(Input input){
+
+		if (draggedObject != null)
+			draggedObject.drag(draggedObjectOffCoords, mouseX, mouseY);
+		else{
+			for (Draggable obj: draggables){
+				if (obj.getOffsetShape(xOffset, yOffset).contains(mouseX, mouseY)){
+					draggedObject = obj;
+					draggedObject.setDragging(true);
+					Coordinates objCoord = obj.getCoordinates();
+					draggedObjectOffCoords = new Coordinates(mouseX - objCoord.getX(), mouseY - objCoord.getY());
+					// once an object is found to be dragged, no other objects can be so return
+					return;
+				}
+			}
+			checkUnitsForDragging();
+
+
+		} // end case draggedObject == null
+
+
+	} // end method handleDragging
 
 	private void checkUnitsForDragging(){
 		for (Faction f: world.getFactions())
 			for (Army army: f.getArmies()){
 				Shape s = army.getOffsetShape(xOffset, yOffset);
-				System.out.println("sx-"+ s.getX() +"   sy-"+s.getY() + "    " + s.contains(mouseX, mouseY));
 				if (army.getOffsetShape(xOffset, yOffset).contains(mouseX, mouseY)){
-					if (draggedObject == null){
-						army.setDragging(true);
-						draggedObject = army;
-						Coordinates objCoord = army.getCoordinates();
-						draggedObjectOffCoords = new Coordinates(mouseX - objCoord.getX() * Tile.SIZE , mouseY - objCoord.getY() * Tile.SIZE);
-						break;
-					}
-					else{
-						draggedObject.drag(draggedObjectOffCoords, mouseX, mouseY);
-						
-					}
-				} // end army contains mouse
-			}
+					army.setDragging(true);
+					draggedObject = army;
+					Coordinates objCoord = army.getCoordinates();
+					draggedObjectOffCoords = new Coordinates(mouseX - objCoord.getX() * Tile.SIZE , mouseY - objCoord.getY() * Tile.SIZE);
+					return;
+				}
+
+			} // end army contains mouse
+
 	}
 
 
@@ -229,7 +248,7 @@ public class WorldState extends BasicGameState {
 	}
 
 	// ******************************************* General Methods ************************************************************
-	public Tile determineMouseTileLocation(int mouseX, int mouseY){
+	public Tile determineMouseTileLocation(){
 		/*
 		 * This method will determine which tile the mouse is over
 		 * If the mouse is in a location without a tile, the method will return null
@@ -250,7 +269,7 @@ public class WorldState extends BasicGameState {
 		xOffset = xOff;
 		yOffset = yOff;
 	}
-	
+
 	public World getWorld(){
 		return this.world;
 	}
