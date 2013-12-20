@@ -221,15 +221,16 @@ public class WorldState extends BasicGameState {
 		}// end popup menu block
 
 
-		else{
+		
 
 			for (Territory t: world.getMap().getTerritories()){
 
 				// This block will determine if the player has clicked one of the territory bases
 				if (t.onScreen(xOffset, yOffset))
 					if (t.onBaseIcon(mouseX, mouseY, xOffset, yOffset)){
-						if (popupMenu.isActive())
+						if (popupMenu.isActive()){
 							popupMenu.deselect();
+						}
 						popupMenu.selectTerritory(t);
 						return;
 					}
@@ -242,7 +243,7 @@ public class WorldState extends BasicGameState {
 						return;
 					}
 
-		}
+	
 	}
 
 	//*************************************************************
