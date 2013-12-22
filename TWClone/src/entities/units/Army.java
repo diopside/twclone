@@ -1,6 +1,7 @@
 package entities.units;
 
 import java.util.ArrayList;
+import java.util.Stack;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
@@ -29,7 +30,7 @@ public class Army extends Unit{
 		this.name = "Army " + armyNum;
 		this.coord = new Coordinates(t.getX(), t.getY()); // Tile based coordinates
 		this.owner = faction;
-		path = new ArrayList<>();
+		path = new Stack<>();
 		
 		t.setOccupyingEntity(this);
 		initImage(dir);

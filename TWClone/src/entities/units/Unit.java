@@ -1,6 +1,7 @@
 package entities.units;
 
 import java.util.ArrayList;
+import java.util.Stack;
 
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Shape;
@@ -19,7 +20,7 @@ abstract public class Unit extends Entity implements Draggable {
 	protected boolean dragging;
 	protected int maxMovement, movementUsed;
 	protected int lineOfSight;
-	protected ArrayList<Tile> path;
+	protected Stack<Tile> path;
 	
 
 	@Override
@@ -52,10 +53,10 @@ abstract public class Unit extends Entity implements Draggable {
 		if (destination.getX() == coord.getX() && destination.getY() == coord.getY())
 			return;
 		
-		path = PathGenerator.generatePath(coord, destination);
+		path = PathGenerator.generateAStarPath(coord, destination);
 	}
 	
-	public ArrayList<Tile> getPath(){
+	public Stack<Tile> getPath(){
 		return path;
 	}
 }
