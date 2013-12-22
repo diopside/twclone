@@ -195,6 +195,12 @@ public class WorldState extends BasicGameState {
 
 			Army army = new Army(world.getMap().getTiles()[10][10], world.getPlayer(), "res/armies/" + world.getPlayer().getColorName() + ".png", world.getPlayer().getArmies().size() + 1);
 			world.getPlayer().addArmy(army);
+			Army army1 = new Army(world.getMap().getTiles()[11][11], world.getPlayer(), "res/armies/" + world.getPlayer().getColorName() + ".png", world.getPlayer().getArmies().size() + 1);
+			world.getPlayer().addArmy(army1);
+			Army army2 = new Army(world.getMap().getTiles()[11][10], world.getPlayer(), "res/armies/" + world.getPlayer().getColorName() + ".png", world.getPlayer().getArmies().size() + 1);
+			world.getPlayer().addArmy(army2);
+			Army army3 = new Army(world.getMap().getTiles()[11][9], world.getPlayer(), "res/armies/" + world.getPlayer().getColorName() + ".png", world.getPlayer().getArmies().size() + 1);
+			world.getPlayer().addArmy(army3);
 		}
 
 

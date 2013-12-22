@@ -133,6 +133,7 @@ public class Tile implements ToolTippable {
 		tt.setX(this.x * SIZE + SIZE);
 		tt.setY(this.y * SIZE + SIZE);
 		
+		
 		ArrayList<String> message = new ArrayList<>();
 		message.add(territory.getName());
 		switch (id % 6){
@@ -142,6 +143,11 @@ public class Tile implements ToolTippable {
 			case 3: message.add( "\nMarsh territory"); break;
 			case 4: message.add( "\nTundra territory"); break;
 			case 5: message.add( "\nMountain territory"); break;
+		}
+		
+
+		if (occupied()){
+			message.addAll(occupyingEntity.getToolTip());
 		}
 
 

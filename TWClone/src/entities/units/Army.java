@@ -72,6 +72,16 @@ public class Army extends Unit{
 		}
 
 	}
+	
+	@Override 
+	public ArrayList<String> getToolTip(){
+		ArrayList<String> strings = new ArrayList<>();
+		strings.add("");
+		strings.add(name);
+		strings.add("Army of " + owner.getName() + " faction.");
+		
+		return strings;
+	}
 
 
 

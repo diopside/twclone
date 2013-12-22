@@ -1,5 +1,7 @@
 package entities;
 
+import java.util.ArrayList;
+
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
@@ -62,6 +64,20 @@ public class Icon extends Entity {
 		else {
 			f.getFlag().draw(x() * Tile.SIZE-xOffset + icon.getWidth()/2f, y() * Tile.SIZE - f.NEUTRAL_FLAG.getHeight() - yOffset);
 		}
+	}
+
+	@Override
+	public ArrayList<String> getToolTip() {
+		ArrayList<String> strings = new ArrayList<>();
+		
+		strings.add("");
+		if (owner == null)
+			strings.add("Independent city");
+		else
+			strings.add("City controlled by the " + owner.getName() + " faction.");
+		
+		return strings;
+		
 	}
 	
 	

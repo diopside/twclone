@@ -25,8 +25,10 @@ public class PathGenerator {
 		if (dest.occupied())
 			return path;
 
+		//initially add the starting tile to generate adjacent nodes
 		open.add(new Node(start, 0, determineH(start, dest), null));
 
+		// loop will ideally end when the dest is found, otherwise the loop ends when there aren't more nodes to examine, resulting in returning an empty stack
 		while (open.size() > 0){
 			Node nextNode = getBestNode(open);
 			if (nextNode.getTile() == dest){

@@ -1,5 +1,7 @@
 package entities;
 
+import java.util.ArrayList;
+
 abstract public class Entity {
 
 	protected Coordinates coord; // in terms of tX and tY
@@ -20,4 +22,6 @@ abstract public class Entity {
 	public Faction getOwner(){
 		return owner;
 	}
+	
+	public abstract ArrayList<String> getToolTip();
 }
