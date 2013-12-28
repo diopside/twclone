@@ -217,16 +217,14 @@ public class WorldState extends BasicGameState {
 			System.out.println("Territories - " + world.getMap().getTerritories().length);
 			System.out.println("Regions - " + world.getMap().getRegions().size());
 			System.out.println("Factions - " + world.getFactions().length);
-
-			Army army = new Army(world.getMap().getTiles()[10][10], world.getPlayer(), "res/armies/" + world.getPlayer().getColorName() + ".png", world.getPlayer().getArmies().size() + 1);
-			world.getPlayer().addArmy(army);
-			Army army1 = new Army(world.getMap().getTiles()[11][11], world.getPlayer(), "res/armies/" + world.getPlayer().getColorName() + ".png", world.getPlayer().getArmies().size() + 1);
-			world.getPlayer().addArmy(army1);
-			Army army2 = new Army(world.getMap().getTiles()[11][10], world.getPlayer(), "res/armies/" + world.getPlayer().getColorName() + ".png", world.getPlayer().getArmies().size() + 1);
-			world.getPlayer().addArmy(army2);
-			Army army3 = new Army(world.getMap().getTiles()[11][9], world.getPlayer(), "res/armies/" + world.getPlayer().getColorName() + ".png", world.getPlayer().getArmies().size() + 1);
-			world.getPlayer().addArmy(army3);
 		}
+		
+		if (input.isKeyPressed(input.KEY_B)){
+			Tile t = determineMouseTileLocation();
+			if (! t.occupied())
+					world.getPlayer().addArmy(new Army(t, world.getPlayer(), "res/armies/" + world.getPlayer().getColorName() + ".png", world.getPlayer().getArmies().size() + 1 ));
+		}
+		
 		
 		if (input.isKeyPressed(input.KEY_D)){
 			settings.setDisplayAllPaths(false);

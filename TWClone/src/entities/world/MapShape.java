@@ -50,7 +50,7 @@ public class MapShape {
 			int y = (int) ( Math.random() * (size - 2)) + 1;
 			Tile t = new Tile(x, y, TILE_ID); // The last parameter ensures a unique ID for each tile.
 			TILE_ID ++;
-			
+
 			boolean valid = true;
 			for (Tile seed: regionSeeds){ // Ensure the seeds start out a reasonable distance apart
 				if (seed.distance(t) < 3.0f){
@@ -122,14 +122,14 @@ public class MapShape {
 
 		PathGenerator.setTiles(tiles, size);
 		generateTerritorySeeds();
-		
+
 	}
 
 	private void generateTerritorySeeds(){
 
 		boolean[][] assigned = new boolean[size][size];
 
-		
+
 		ArrayList<ArrayList<Tile>> territoryTiles = new ArrayList<ArrayList<Tile>>();
 		for (int i = 0; i < territories.length; i ++){ // create a new list for each territory to house their tiles
 			territoryTiles.add(new ArrayList<Tile>());
@@ -158,7 +158,7 @@ public class MapShape {
 			}
 
 		}
-		
+
 		for (int i = 0; i < territories.length; i ++){
 			territories[i] = new Territory(territoryTiles.get(i), (short) i);
 			territoryTiles.get(i).get(0).setTerritory(territories[i]);
@@ -169,9 +169,9 @@ public class MapShape {
 
 
 	}
-	
+
 	private void growTerritorySeeds(boolean[][] assigned){
-		
+
 		for (int i = 0; i < size; i ++)
 			for (int j = 0; j < size; j ++){
 				Tile currentTile = tiles[i][j];
@@ -180,30 +180,30 @@ public class MapShape {
 					assigned[i][j] = true;
 				}
 			}
-		
+
 		generateBorders();
-		
+
 	}
-	
+
 	private void generateBorders(){
-		
+
 		for (Territory t: territories){
 			for (Tile tile: t.getTiles()){
 				setBorders(tile, t);
 				t.createMaximumBoundaries();
 			}
 		}
-		
-	
-		
+
+
+
 	}
-	
+
 	private void setBorders(Tile tile, Territory t){
 		int tX = tile.getX();
 		int tY = tile.getY();
 		final int MARGIN = 2;
 		// The margin will be added to the borders to ensure there is no overlapping of borders, margin should be equal to painted line width for the border
-		
+
 		// check northern border
 		if (tY - 1 >= 0)
 			if (tiles[tX][tY -1].getTerritory().getID() != t.getID())
@@ -220,10 +220,10 @@ public class MapShape {
 		if (tX - 1 >= 0)
 			if (tiles[tX - 1][tY].getTerritory().getID() != t.getID())
 				t.getBorder().add(new OffsetLine(tX * Tile.SIZE + MARGIN, tY * Tile.SIZE, tX* Tile.SIZE + MARGIN, tY * Tile.SIZE + Tile.SIZE));
-		
+
 	}
-	
-	
+
+
 
 
 	public Tile[][] getTiles(){
@@ -245,16 +245,16 @@ public class MapShape {
 	public int getSize(){
 		return size;
 	}
-	
+
 	public Territory[] getTerritories(){
 		return territories;
 	}
 
 	private void assignTileToClosestTerritory(Tile tile){
-		
+
 		float currentDistance = Float.MAX_VALUE, shortestDistance = Float.MAX_VALUE;
 		Territory bestTerritory = null;
-		
+
 		for (Territory t: territories){
 			Tile currentTile = t.getTiles().get(0);
 			currentDistance = (float) tile.distance(currentTile);
@@ -263,12 +263,31 @@ public class MapShape {
 				bestTerritory = t;
 			}
 		}
-		
+
 		bestTerritory.getTiles().add(tile);
 		tile.setTerritory(bestTerritory);
-		
+
 	}
 
+	public ArrayList<Tile> getTileNeighbors(Tile t){
+		ArrayList<Tile> neighbors = new ArrayList<>();
+
+		int xStartIndex = t.getX() - 1 < 0 ? 0 : -1;
+		int xEndIndex = t.getX() + 1 >= size ? 0 : 1;
+		int yStartIndex = t.getY() - 1 < 0 ? 0 : -1;
+		int yEndIndex = t.getY() + 1 >= size? 0 : 1;
+
+		for (int x = xStartIndex; x < xEndIndex + 1; x ++)
+			for (int y = yStartIndex; y < yEndIndex + 1; y ++)
+				if ( x == 0 && y == 0)
+					continue;
+				else
+					neighbors.add(tiles[x][y]);
+
+
+
+		return neighbors;
+	}
 
 
 

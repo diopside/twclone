@@ -17,6 +17,7 @@ import entities.Faction;
 import entities.Leader;
 import entities.PathGenerator;
 import entities.world.Tile;
+import entities.world.World;
 
 public class Army extends Unit{
 
@@ -83,6 +84,9 @@ public class Army extends Unit{
 
 	@Override 
 	public ArrayList<String> getToolTip(){
+		/*
+		 * This will be used by entities that can be described in a tool tip
+		 */
 		ArrayList<String> strings = new ArrayList<>();
 		strings.add("");
 		strings.add(name);
@@ -92,15 +96,16 @@ public class Army extends Unit{
 	}
 
 	@Override
-	public void move() {
-		Tile t = path.get(0);
+	public void move(World world) {
+		Tile t = path.get(0); // simply to make the code less method chain-y
 
 		if (t.occupied()){
-			if (t.getOccupyingEntity() instanceof Army){
-				if (!t.getOccupyingEntity().getOwner().equals(this.getOwner()))       ;
+			if (t.getOccupyingEntity() instanceof Army && !t.getOccupyingEntity().getOwner().equals(this.getOwner())){
+				;
 				// insert code for a battle here
 			}
 			else {
+				// if the unit is blocked but not by something that ceases movement, carry on moving, with a new path
 				path = PathGenerator.generateAStarPath(coord, path.get(path.size() - 1));
 			}
 		} // end case of path occupied
@@ -111,11 +116,10 @@ public class Army extends Unit{
 		}
 	}
 
-	public void processTurn(){
-		if (path.size() > 0)
-			while (remainingMovement > 0){
-				move();
-			}
+	public void processTurn(World world){// this prevent index out of bounds exceptions
+		while (remainingMovement > 0 && path.size() > 0){
+			move(world);
+		}
 
 
 	}

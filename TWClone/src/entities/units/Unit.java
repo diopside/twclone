@@ -14,6 +14,7 @@ import entities.Faction;
 import entities.PathGenerator;
 import entities.world.Territory;
 import entities.world.Tile;
+import entities.world.World;
 
 abstract public class Unit extends Entity implements Draggable {
 
@@ -56,7 +57,7 @@ abstract public class Unit extends Entity implements Draggable {
 		return remainingMovement;
 	}
 	
-	public abstract void move();
+	public abstract void move(World world);
 		
 	
 	

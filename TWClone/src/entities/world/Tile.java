@@ -96,7 +96,6 @@ public class Tile implements ToolTippable {
 	
 	
 
-
 	public static void initTiles(){
 		tiles = new Image[24];
 		try{

@@ -9,6 +9,7 @@ import org.newdawn.slick.SlickException;
 
 import entities.units.*;
 import entities.world.Territory;
+import entities.world.World;
 
 public class Faction {
 
@@ -124,9 +125,9 @@ public class Faction {
 		}
 	}
 	
-	public void processTurn(){
+	public void processTurn(World world){
 		for (Army army: armies){
-			army.processTurn();
+			army.processTurn(world);
 		}
 		
 		

@@ -60,7 +60,7 @@ public class EndTurnState extends BasicGameState{
 		worldState.incYear();
 		
 		for (Faction f: worldState.getWorld().getFactions()){
-			f.processTurn();
+			f.processTurn(worldState.getWorld());
 		}
 		
 		for (Territory t: worldState.getWorld().getMap().getTerritories()){
