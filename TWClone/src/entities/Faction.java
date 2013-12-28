@@ -125,8 +125,19 @@ public class Faction {
 	}
 	
 	public void processTurn(){
+		for (Army army: armies){
+			army.processTurn();
+		}
 		
+		
+		for (Unit u: getUnits()){
+			u.resetMovement();
+		}
 	}
 	
 	
 }
+
+
+
+

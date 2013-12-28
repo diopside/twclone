@@ -236,11 +236,15 @@ public class WorldState extends BasicGameState {
 
 
 
-	} // END UPDATE METHOD
+	} // END UPDATE METHODS
 
 	//********************************************************
 
 	private void handleLeftClick(Input input, StateBasedGame game){
+		
+
+		hud.checkButtons(mouseX, mouseY, game);
+		
 		if (hud.getMiniMap().getRectangle().contains(mouseX, mouseY)){
 			hud.getMiniMap().click(mouseX, mouseY, this);
 		}
@@ -258,7 +262,6 @@ public class WorldState extends BasicGameState {
 		}// end popup menu block
 
 
-		hud.checkButtons(mouseX, mouseY, game);
 
 		for (Territory t: world.getMap().getTerritories()){
 

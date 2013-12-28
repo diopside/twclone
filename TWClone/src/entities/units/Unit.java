@@ -33,6 +33,9 @@ abstract public class Unit extends Entity implements Draggable {
 		dragging = b;
 	}
 
+	public void resetMovement(){
+		remainingMovement = maxMovement;
+	}
 	@Override
 	abstract public void drag(Coordinates offCoords, int xOffset, int yOffset);
 	

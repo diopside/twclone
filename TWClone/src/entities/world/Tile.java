@@ -90,6 +90,10 @@ public class Tile implements ToolTippable {
 		return id % 6;
 	}
 	
+	public Entity getOccupyingEntity(){
+		return occupyingEntity;
+	}
+	
 	
 
 

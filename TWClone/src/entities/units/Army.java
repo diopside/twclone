@@ -31,10 +31,11 @@ public class Army extends Unit{
 		this.coord = new Coordinates(t.getX(), t.getY()); // Tile based coordinates
 		this.owner = faction;
 		path = new ArrayList<>();
-		
+
 		t.setOccupyingEntity(this);
 		initImage(dir);
 		generateMaxMovement();
+		remainingMovement = maxMovement;
 	}
 
 	private void initImage(String dir){
@@ -48,12 +49,12 @@ public class Army extends Unit{
 	@Override
 	public void drag(Coordinates offCoords, int mouseX, int mouseY) {
 		// Currently nothing, call a setDestination() method to create a path to the tile
-		
+
 	}
-	
+
 	private void generateMaxMovement(){
 		// This method will determine how fast the army should be based off of a number of factors
-		
+
 		maxMovement = 6;
 	}
 
@@ -66,7 +67,7 @@ public class Army extends Unit{
 	@Override
 	public void render(Graphics g, int xOffset, int yOffset, int mouseX,
 			int mouseY) {
-		
+
 		if (getOffsetShape(xOffset, yOffset).intersects(Game.SCREEN) || dragging){
 			if (dragging){
 				image.setAlpha(.75f);
@@ -79,23 +80,51 @@ public class Army extends Unit{
 		}
 
 	}
-	
+
 	@Override 
 	public ArrayList<String> getToolTip(){
 		ArrayList<String> strings = new ArrayList<>();
 		strings.add("");
 		strings.add(name);
 		strings.add("Army of " + owner.getName() + " faction.");
-		
+
 		return strings;
 	}
 
 	@Override
 	public void move() {
-		
+		Tile t = path.get(0);
+
+		if (t.occupied()){
+			if (t.getOccupyingEntity() instanceof Army){
+				if (!t.getOccupyingEntity().getOwner().equals(this.getOwner()))       ;
+				// insert code for a battle here
+			}
+			else {
+				path = PathGenerator.generateAStarPath(coord, path.get(path.size() - 1));
+			}
+		} // end case of path occupied
+		else {
+			coord = new Coordinates(t.getX(), t.getY());
+			path.remove(0);
+			remainingMovement --;
+		}
+	}
+
+	public void processTurn(){
+		if (path.size() > 0)
+			while (remainingMovement > 0){
+				move();
+			}
+
+
 	}
 
 
 
 
 }
+
+
+
+
