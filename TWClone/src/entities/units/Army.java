@@ -54,7 +54,7 @@ public class Army extends Unit{
 	private void generateMaxMovement(){
 		// This method will determine how fast the army should be based off of a number of factors
 		
-		maxMovement = 5;
+		maxMovement = 6;
 	}
 
 

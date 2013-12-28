@@ -142,7 +142,12 @@ public class Territory {
 	}
 
 	public short getID(){
+	
 		return ID;
+	}
+	
+	public void processTurn(){
+		
 	}
 
 

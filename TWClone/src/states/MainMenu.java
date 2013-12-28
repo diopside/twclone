@@ -30,8 +30,8 @@ public class MainMenu extends BasicGameState {
 	public void render(GameContainer container, StateBasedGame game,
 			Graphics g) throws SlickException {
 		g.setBackground(Color.lightGray);
-		newGameBtn.render(g, 0, 0, 1f);
-		quitBtn.render(g, 0, 0, 1f);
+		newGameBtn.render(g, 1f);
+		quitBtn.render(g, 1f);
 	}
 
 	@Override

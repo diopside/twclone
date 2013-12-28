@@ -124,5 +124,9 @@ public class Faction {
 		}
 	}
 	
+	public void processTurn(){
+		
+	}
+	
 	
 }

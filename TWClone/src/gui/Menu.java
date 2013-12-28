@@ -132,7 +132,7 @@ public class Menu implements Draggable {
 
 		for (Button b: buttons){
 			// alpha is squared to deal with the fact that layered rendering makes it appear more opaque than desired, this also keeps it at 1f if 1f is the alpha value
-			b.render(g, xOffset, yOffset, alpha * alpha);
+			b.renderOffset(g, xOffset, yOffset, alpha * alpha);
 		}
 	}
 

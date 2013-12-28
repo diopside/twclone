@@ -4,6 +4,7 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.state.StateBasedGame;
 
 import states.Game;
 import entities.units.Unit;
@@ -11,16 +12,19 @@ import entities.world.World;
 
 public class Hud {
 
-	private static final int X = 0, Y = 600;
+	private static final int X = 0, Y = 600, END_TURN_X = Game.WIDTH - 144, END_TURN_Y = Game.HEIGHT - 64;
 	private Image frame;
 	private MiniMap miniMap;
 	private World world;
 	private Unit selectedUnit;
+	private BasicButton endTurnBtn;
 	
 	public Hud(World world){
 		this.world = world;
 		miniMap = new MiniMap();
 		initImages();
+		
+		endTurnBtn = new BasicButton(END_TURN_X, END_TURN_Y, "res/buttons/hud/endturn.png");
 	}
 	
 	private void initImages(){
@@ -41,9 +45,10 @@ public class Hud {
 	}
 	
 	
-	public void render(Graphics g){
+	public void render(Graphics g, int xOffset, int yOffset){
 		frame.draw(X, Y);
 		renderInformation(g);
+		endTurnBtn.render(g, 1f);
 	}
 	
 	private void renderInformation(Graphics g){
@@ -59,6 +64,17 @@ public class Hud {
 			int tX = selectedUnit.getCoordinates().getX(); int tY = selectedUnit.getCoordinates().getY();
 			g.drawString("Tile: " + tX + "," + tY, 400 + X, 115 + Y);
 		}
+	}
+	
+	public void checkButtons(int mouseX, int mouseY, StateBasedGame game){
+		/*
+		 * This method will be called if the mouse button is clicked and the mouse is in the HUD
+		 */
+		
+		if (endTurnBtn.contains(mouseX, mouseY)){
+			game.enterState(Game.END_TURN_ID);
+		}
+				
 	}
 	
 	

@@ -42,7 +42,7 @@ public class Game extends StateBasedGame{
 	public static final int WIDTH = 1200, HEIGHT = 800;
 	public static final Rectangle SCREEN = new Rectangle(0, 0, WIDTH, HEIGHT);
 	//State IDs
-	public static final int MAIN_MENU_STATE_ID = 0, WORLD_STATE_ID = 1, EMPIRE_STATE_ID = 2, TERRITORY_STATE_ID = 3, OPTIONS_STATE_ID = 4, TEST_STATE_ID = 5;
+	public static final int MAIN_MENU_STATE_ID = 0, WORLD_STATE_ID = 1, EMPIRE_STATE_ID = 2, TERRITORY_STATE_ID = 3, OPTIONS_STATE_ID = 4, TEST_STATE_ID = 5, END_TURN_ID = 6;
 	public static TrueTypeFont MORRIS_ROMAN_18, MORRIS_ROMAN_24;
 	public static Image CURSOR, BACKGROUND_1, BACKGROUND_2;
 	
@@ -56,6 +56,7 @@ public class Game extends StateBasedGame{
 		addState(new TerritoryState(TERRITORY_STATE_ID));
 		addState(new Options(OPTIONS_STATE_ID));
 		addState(new TestState(TEST_STATE_ID));
+		addState(new EndTurnState(END_TURN_ID));
 		
 	}
 	

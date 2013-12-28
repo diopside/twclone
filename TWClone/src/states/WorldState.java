@@ -107,7 +107,7 @@ public class WorldState extends BasicGameState {
 		if (toolTip.isActive())
 			toolTip.render(g, xOffset, yOffset);
 
-		hud.render(g);
+		hud.render(g, xOffset, yOffset);
 		hud.getMiniMap().render(g, xOffset, yOffset);
 
 
@@ -258,7 +258,7 @@ public class WorldState extends BasicGameState {
 		}// end popup menu block
 
 
-
+		hud.checkButtons(mouseX, mouseY, game);
 
 		for (Territory t: world.getMap().getTerritories()){
 
@@ -362,6 +362,10 @@ public class WorldState extends BasicGameState {
 	public void selectUnit(Unit u){
 		hud.select(u);
 		selectedUnit = u;
+	}
+	
+	public void incYear(){
+		world.setYear(world.getYear() + 1);
 	}
 
 

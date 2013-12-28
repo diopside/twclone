@@ -101,6 +101,9 @@ public class World {
 	public int getYear(){
 		return year;
 	}
+	public void setYear(int i){
+		year = i;
+	}
 	public Faction getPlayer(){
 		return factions[0];
 	}
