@@ -24,4 +24,6 @@ abstract public class Entity {
 	}
 	
 	public abstract ArrayList<String> getToolTip();
+	
+
 }

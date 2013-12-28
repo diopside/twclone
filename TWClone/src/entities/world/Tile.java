@@ -62,10 +62,6 @@ public class Tile implements ToolTippable {
 	
 	public void render(int x, int y, Graphics g, int xOffset, int yOffset){
 		tiles[id].draw(x, y);
-		if (occupied()){
-			g.setColor(Color.pink);
-			g.draw(getRectangle(xOffset, yOffset));
-		}
 	}
 
 	public Rectangle getRectangle(int xOffset, int yOffset){

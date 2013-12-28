@@ -30,7 +30,9 @@ public class Territory {
 	private ArrayList<Building> buildings;
 	private Rectangle maximumBoundaries;
 	private Army garrison;
-
+	private int foodVal;
+	private int mineralVal;
+	private int woodVal;
 
 
 
@@ -116,6 +118,13 @@ public class Territory {
 		return baseIcon.getShape(xOffset, yOffset).contains(mouseX, mouseY);
 	}
 
+	public void generateVals(){
+		
+		
+		
+		
+		
+	}
 
 	public int getType(){
 		// The type of territory it is, eg Desert

@@ -2,6 +2,7 @@ package entities.units;
 
 import java.util.ArrayList;
 import java.util.Stack;
+import java.util.Vector;
 
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Shape;
@@ -18,9 +19,9 @@ abstract public class Unit extends Entity implements Draggable {
 
 	protected String name;
 	protected boolean dragging;
-	protected int maxMovement, movementUsed;
+	protected int maxMovement, remainingMovement;
 	protected int lineOfSight;
-	protected Stack<Tile> path;
+	protected ArrayList<Tile> path;
 	
 
 	@Override
@@ -44,6 +45,18 @@ abstract public class Unit extends Entity implements Draggable {
 		return this.name;
 	}
 	
+	public int getMaxMovement(){
+		return maxMovement;
+	}
+	
+	public int getRemainingMovement(){
+		return remainingMovement;
+	}
+	
+	public abstract void move();
+		
+	
+	
 	public void setDestination(Tile destination){
 		
 		
@@ -56,7 +69,7 @@ abstract public class Unit extends Entity implements Draggable {
 		path = PathGenerator.generateAStarPath(coord, destination);
 	}
 	
-	public Stack<Tile> getPath(){
+	public ArrayList<Tile> getPath(){
 		return path;
 	}
 }

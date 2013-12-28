@@ -15,7 +15,7 @@ public class World {
 	private World(Faction[] factions, int year){
 		this.factions = factions;
 		this.year = year;
-		map = new MapShape(64);
+		map = new MapShape(80);
 		giveInitialTerritories();
 
 

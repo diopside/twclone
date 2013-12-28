@@ -30,10 +30,11 @@ public class Army extends Unit{
 		this.name = "Army " + armyNum;
 		this.coord = new Coordinates(t.getX(), t.getY()); // Tile based coordinates
 		this.owner = faction;
-		path = new Stack<>();
+		path = new ArrayList<>();
 		
 		t.setOccupyingEntity(this);
 		initImage(dir);
+		generateMaxMovement();
 	}
 
 	private void initImage(String dir){
@@ -48,6 +49,12 @@ public class Army extends Unit{
 	public void drag(Coordinates offCoords, int mouseX, int mouseY) {
 		// Currently nothing, call a setDestination() method to create a path to the tile
 		
+	}
+	
+	private void generateMaxMovement(){
+		// This method will determine how fast the army should be based off of a number of factors
+		
+		maxMovement = 5;
 	}
 
 
@@ -81,6 +88,11 @@ public class Army extends Unit{
 		strings.add("Army of " + owner.getName() + " faction.");
 		
 		return strings;
+	}
+
+	@Override
+	public void move() {
+		
 	}
 
 

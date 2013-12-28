@@ -12,9 +12,11 @@ import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
+import utilities.Settings;
 import entities.Coordinates;
 import entities.Draggable;
 import entities.Faction;
+import entities.PathGenerator;
 import entities.units.Army;
 import entities.units.Unit;
 import entities.world.Territory;
@@ -38,6 +40,7 @@ public class WorldState extends BasicGameState {
 	private Hud hud;
 	private Menu popupMenu;
 	private ToolTip toolTip;
+	private Settings settings;
 
 	private int mouseX, mouseY;
 
@@ -67,6 +70,8 @@ public class WorldState extends BasicGameState {
 		draggables = new ArrayList<>();
 		draggables.add(popupMenu);
 		draggables.add(toolTip);
+		settings = new Settings();
+		settings.setDisplayAllPaths(true);
 
 	}
 
@@ -76,7 +81,7 @@ public class WorldState extends BasicGameState {
 	public void render(GameContainer container, StateBasedGame game,
 			Graphics g) throws SlickException {
 
-		
+
 		Game.BACKGROUND_2.draw();
 		world.render(g, xOffset, yOffset);
 
@@ -86,17 +91,12 @@ public class WorldState extends BasicGameState {
 			if (t != null){
 				int tX = t.getX();
 				int tY = t.getY();
+				g.setColor(Color.black);
 				g.draw(new Rectangle(tX * Tile.SIZE - xOffset, tY * Tile.SIZE - yOffset, Tile.SIZE, Tile.SIZE));
 			}
 		}
+
 		
-		if (selectedUnit != null){
-			for (Tile c: selectedUnit.getPath()){
-				
-				g.setColor(Color.pink);
-				g.draw(c.getRectangle(xOffset, yOffset));
-			}
-		}
 
 		renderUnits(g);
 
@@ -115,8 +115,33 @@ public class WorldState extends BasicGameState {
 
 
 	} // END RENDER METHOD
+	
 
 	private void renderUnits(Graphics g){
+		
+		if (settings.isDisplayAllPaths()){
+			for (int i = 0; i < world.getPlayer().getUnits().size(); i ++){
+				Unit u = world.getPlayer().getUnits().get(i);
+				int speed = u.getMaxMovement();
+				for (int j= 0; j< u.getPath().size(); j ++){
+					Color color = j == 0 ? PathGenerator.TURN_1_COLOR : PathGenerator.getTurnColor(j / speed);
+					g.setColor(u.getOwner().getColor());
+					g.drawString(""+j, u.getPath().get(j).getX() * Tile.SIZE - xOffset + 10, u.getPath().get(j).getY() * Tile.SIZE - yOffset + 10);
+					g.setColor(color);
+					g.draw(u.getPath().get(j).getRectangle(xOffset, yOffset));
+				}
+
+
+			}
+		}
+		else if (selectedUnit != null){
+			
+			for (int i = 0; i < selectedUnit.getPath().size(); i ++){
+				Color color = i == 0 ? PathGenerator.TURN_1_COLOR : PathGenerator.getTurnColor(i / selectedUnit.getMaxMovement());
+				g.setColor(color);
+				g.draw(selectedUnit.getPath().get(i).getRectangle(xOffset, yOffset));
+			}
+		}
 
 		for (Faction f: world.getFactions()){
 			f.renderArmies(g, xOffset, yOffset, mouseX, mouseY);
@@ -180,12 +205,12 @@ public class WorldState extends BasicGameState {
 				draggedObject = null;
 
 			}
-		
+
 		if (input.isKeyPressed(input.KEY_SPACE)){
 			selectedUnit = null;
 			hud.select(null);
 		}
-		
+
 
 		if (input.isKeyPressed(input.KEY_P)){
 			// This will be used just to display information for me 
@@ -201,6 +226,12 @@ public class WorldState extends BasicGameState {
 			world.getPlayer().addArmy(army2);
 			Army army3 = new Army(world.getMap().getTiles()[11][9], world.getPlayer(), "res/armies/" + world.getPlayer().getColorName() + ".png", world.getPlayer().getArmies().size() + 1);
 			world.getPlayer().addArmy(army3);
+		}
+		
+		if (input.isKeyPressed(input.KEY_D)){
+			settings.setDisplayAllPaths(false);
+			
+			//PathGenerator.testPathFinder();
 		}
 
 
@@ -227,29 +258,29 @@ public class WorldState extends BasicGameState {
 		}// end popup menu block
 
 
-		
 
-			for (Territory t: world.getMap().getTerritories()){
 
-				// This block will determine if the player has clicked one of the territory bases
-				if (t.onScreen(xOffset, yOffset))
-					if (t.onBaseIcon(mouseX, mouseY, xOffset, yOffset)){
-						if (popupMenu.isActive()){
-							popupMenu.deselect();
-						}
-						popupMenu.selectTerritory(t);
-						return;
+		for (Territory t: world.getMap().getTerritories()){
+
+			// This block will determine if the player has clicked one of the territory bases
+			if (t.onScreen(xOffset, yOffset))
+				if (t.onBaseIcon(mouseX, mouseY, xOffset, yOffset)){
+					if (popupMenu.isActive()){
+						popupMenu.deselect();
 					}
-			} // End territory for loop
+					popupMenu.selectTerritory(t);
+					return;
+				}
+		} // End territory for loop
 
-			for (Faction f: world.getFactions())
-				for (Unit u: f.getUnits())
-					if (u.getOffsetShape(xOffset, yOffset).contains(mouseX, mouseY)){
-						selectUnit(u);
-						return;
-					}
+		for (Faction f: world.getFactions())
+			for (Unit u: f.getUnits())
+				if (u.getOffsetShape(xOffset, yOffset).contains(mouseX, mouseY)){
+					selectUnit(u);
+					return;
+				}
 
-	
+
 	}
 
 	//*************************************************************
@@ -258,7 +289,7 @@ public class WorldState extends BasicGameState {
 
 		if (draggedObject != null){
 			draggedObject.drag(draggedObjectOffCoords, mouseX, mouseY);
-			
+
 		}
 		else{
 			for (Draggable obj: draggables){
@@ -327,7 +358,7 @@ public class WorldState extends BasicGameState {
 	public World getWorld(){
 		return this.world;
 	}
-	
+
 	public void selectUnit(Unit u){
 		hud.select(u);
 		selectedUnit = u;

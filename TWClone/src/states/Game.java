@@ -29,7 +29,9 @@ public class Game extends StateBasedGame{
 	 * - Make the faction territories grouped together and scale them based off of the size of the game
 	 * 
 	 * 
+	 * - change event of trying to find path to occupied tile to finding best close tile
 	 * 
+	 * - change pathfinding to sort the open list by best f
 	 * 
 	 * 
 	 * 

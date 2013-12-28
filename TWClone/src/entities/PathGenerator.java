@@ -2,7 +2,11 @@ package entities;
 
 import java.util.ArrayList;
 import java.util.Stack;
+import java.util.ArrayList;
 
+import org.newdawn.slick.Color;
+
+import entities.units.Army;
 import entities.world.Tile;
 
 public class PathGenerator {
@@ -11,17 +15,21 @@ public class PathGenerator {
 	private static int SIZE;
 	private static final int MAX_DISTANCE = 100; // The greatest distance away from the current unit allowed to generate a path from
 
+	// These colors will be used in painting unit paths, indicating how long it will take the unit to get somewhere
+	public static final Color TURN_1_COLOR = new Color(0, 255, 0), TURN_2_COLOR = new Color(255, 216, 0), 
+			TURN_3_COLOR = new Color(255, 106, 0), DEFAULT_TURN_COLOR = new Color(255, 0 ,0);
 
 
 
-	public static Stack<Tile> generateAStarPath(Coordinates startCoord, Tile dest){
+	public static ArrayList<Tile> generateAStarPath(Coordinates startCoord, Tile dest){
 		long s = System.currentTimeMillis();
-		Stack<Tile> path = new Stack<>();
+		ArrayList<Tile> path = new ArrayList<>();
 		ArrayList<Node> open = new ArrayList<>();
 		ArrayList<Node> closed = new ArrayList<>();
 		Tile start = TILES[startCoord.getX()][startCoord.getY()];
-		
+
 		// currently if the destination is occupied it just won't generate a path
+		// eventually change this to the adjacent tile with the lowest f value
 		if (dest.occupied())
 			return path;
 
@@ -33,6 +41,7 @@ public class PathGenerator {
 			Node nextNode = getBestNode(open);
 			if (nextNode.getTile() == dest){
 				traversePath(nextNode, path);
+				path = reversePath(path);
 				break;
 			}
 			addNeighbors(getBestNode(open), open, closed, start, dest);
@@ -42,7 +51,23 @@ public class PathGenerator {
 
 	}
 
-	private static void traversePath(Node node, Stack<Tile> path){
+	private static ArrayList<Tile> reversePath(ArrayList<Tile> path){
+		/*
+		 * Currently the path is returned in reverse order
+		 * it is easier right now just to quickly reverse the nodes rather than changing other functionality
+		 */
+		ArrayList<Tile> newPath = new ArrayList<>();
+		for (int i = 0; i < path.size(); i ++)
+			newPath.add(path.get(path.size() - 1 - i));
+		
+		                                    
+		return newPath;
+		
+	}
+	private static void traversePath(Node node, ArrayList<Tile> path){
+		/*
+		 * This method will recursively follow the path backwards from node until it reaches a null parent
+		 */
 		if (node.getParent() == null)
 			return;
 		else{
@@ -66,7 +91,7 @@ public class PathGenerator {
 				if (j == 0 && i == 0)
 					continue;
 				else{
-					if (current.getTile().getX() + i > 0 && current.getTile().getX() + i < SIZE && current.getTile().getY() + j > 0 && current.getTile().getY() + j < SIZE){
+					if (current.getTile().getX() + i >= 0 && current.getTile().getX() + i < SIZE && current.getTile().getY() + j >= 0 && current.getTile().getY() + j < SIZE){
 						Tile next = TILES[current.getTile().getX() + i][current.getTile().getY() + j];
 						if (isValid(next, closed)){
 							if (open.contains(next))
@@ -139,6 +164,39 @@ public class PathGenerator {
 		return 10 * (dx + dy);
 	}
 
+
+	public static void testPathFinder(){
+		/*
+		 * This method is going to be used to determine the speed of the pathfinding algo
+		 */
+		long slowestFind = 0;
+		long averageFind = 0;
+		long quickestFind = 0;
+
+		Tile start, dest;
+
+
+		for (int i = 0; i < 100; i ++){
+			int rnd1 = (int) (Math.random() * SIZE);
+			int rnd2 = (int) (Math.random() * SIZE);
+			int rnd3 = (int) (Math.random() * SIZE);
+			int rnd4 = (int) (Math.random() * SIZE);
+
+			long startTime = System.nanoTime();
+			PathGenerator.generateAStarPath(new Coordinates(rnd1, rnd2), TILES[rnd3][rnd4]);
+			long duration = System.nanoTime() - startTime;
+
+			averageFind += duration;
+			slowestFind = slowestFind > duration ? slowestFind : duration;
+			quickestFind = quickestFind < duration? quickestFind : duration;
+
+		}
+
+		System.out.println("Slowest Path Time: " + slowestFind);
+		System.out.println("Quickest Path Time: " + quickestFind);
+		System.out.println("Average Path Time: " + averageFind / 100);
+
+	}
 
 
 	/*
@@ -215,8 +273,25 @@ public class PathGenerator {
 
 
 
+	public static Color getTurnColor(int turn){
+		
+		/*
+		 * This method will get the appropriate color to render a unit's path based off of how many turns it would take 
+		 * the unit to reach the node in the path
+		 */
+		switch (turn){
 
+		case 0: return TURN_1_COLOR;
 
+		case 1: return TURN_2_COLOR;
+
+		case 2: return TURN_3_COLOR;
+
+		default:  return DEFAULT_TURN_COLOR;
+		}
+
+	}
+	
 
 
 }
