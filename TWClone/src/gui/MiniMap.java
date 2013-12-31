@@ -20,10 +20,10 @@ public class MiniMap {
 	private static Color forest = new Color(0x264200), plains = new Color(0x26BE00), desert = new Color(0xFFE97F), 
 			tundra = new Color(0xE2E2E2), mountains = new Color(0x404040), marsh = new Color(0x007F46);
 	private float arrLength;
-	private ArrayList<ColoredShape> lines;
+	private ArrayList<ColoredShape> shapes;
 
 	public MiniMap(){
-		lines = new ArrayList<>();
+		shapes = new ArrayList<>();
 	}
 
 	public void setInformation(Tile[][] t, int length){
@@ -50,8 +50,11 @@ public class MiniMap {
 				case 5:
 					color = mountains; break;
 				}
-				Line line = new Line(i * rSize + START_X, j * rSize + START_Y, (i + 1) * rSize + START_X, (j+1)*rSize + START_Y);
-				lines.add(new ColoredShape(line, color));
+				//Line line = new Line(i * rSize + START_X, j * rSize + START_Y, (i + 1) * rSize + START_X, (j+1)*rSize + START_Y);
+				//shapes.add(new ColoredShape(line, color));
+				Rectangle rect = new Rectangle (i * rSize + START_X, j * rSize + START_Y, rSize, rSize);
+				shapes.add(new ColoredShape(rect, color));
+				
 				
 			}
 		}
@@ -59,8 +62,8 @@ public class MiniMap {
 
 	public void render(Graphics g, int xOffset, int yOffset){
 		float rSize = (float) (SIZE / arrLength);
-		g.setLineWidth(rSize);
-		for (ColoredShape cs: lines){
+		//g.setLineWidth(rSize);
+		for (ColoredShape cs: shapes){
 			g.setColor(cs.getColor());
 			g.draw(cs.getShape());
 		}

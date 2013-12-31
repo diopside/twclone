@@ -15,7 +15,7 @@ public class World {
 	private World(Faction[] factions, int year){
 		this.factions = factions;
 		this.year = year;
-		map = new MapShape(80);
+		map = new MapShape(100);
 		giveInitialTerritories();
 
 
@@ -45,7 +45,7 @@ public class World {
 	}
 
 	private void renderTiles(Graphics g, int xOffset, int yOffset){
-		final int TOTAL_X = 40, TOTAL_Y = 28;
+		final int TOTAL_X = 40, TOTAL_Y = 28; // The total number of tiles to be rendered, should total out to around (on the larger side) the total pixels of the game screen
 		
 		int tX = determineTileRenderStart(xOffset, TOTAL_X);
 		int tY = determineTileRenderStart(yOffset, TOTAL_Y);

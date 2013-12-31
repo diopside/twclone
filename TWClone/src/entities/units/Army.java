@@ -116,7 +116,8 @@ public class Army extends Unit{
 		}
 	}
 
-	public void processTurn(World world){// this prevent index out of bounds exceptions
+	public void processTurn(World world){
+		// this prevents index out of bounds exceptions
 		while (remainingMovement > 0 && path.size() > 0){
 			move(world);
 		}
