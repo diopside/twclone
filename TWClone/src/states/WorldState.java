@@ -217,6 +217,11 @@ public class WorldState extends BasicGameState {
 			System.out.println("Territories - " + world.getMap().getTerritories().length);
 			System.out.println("Regions - " + world.getMap().getRegions().size());
 			System.out.println("Factions - " + world.getFactions().length);
+			
+			Tile t = determineMouseTileLocation();
+			if (t != null){
+				System.out.println(t.getTerritory().getResInfo());
+			}
 		}
 		
 		if (input.isKeyPressed(input.KEY_B)){

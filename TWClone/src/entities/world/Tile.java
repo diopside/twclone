@@ -18,6 +18,7 @@ public class Tile implements ToolTippable {
 
 	public static Image[] tiles; // static holder for tile images
 	public static final int SIZE = 32; // size of the tiles
+	public static final int SWAMP_ID = 3, PLAINS_ID = 0, FOREST_ID = 1, DESERT_ID = 2, TUNDRA_ID = 4, MOUNTAIN_ID = 5;
 
 	private int id, x, y;
 	private Territory territory;
@@ -131,6 +132,7 @@ public class Tile implements ToolTippable {
 	public void setToolTip(ToolTip tt) {
 		tt.setX(this.x * SIZE + SIZE);
 		tt.setY(this.y * SIZE + SIZE);
+		
 		
 		
 		ArrayList<String> message = new ArrayList<>();

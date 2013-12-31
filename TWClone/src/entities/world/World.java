@@ -16,6 +16,7 @@ public class World {
 		this.factions = factions;
 		this.year = year;
 		map = new MapShape(100);
+		
 		giveInitialTerritories();
 
 

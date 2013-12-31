@@ -22,8 +22,10 @@ public class MapShape {
 		tiles = new Tile[size][size];
 		territories = new Territory[ (int)(size * .8)];
 		regions = new ArrayList<>();
-		generateShape();
 		TILE_ID = 0;
+		generateShape();
+		
+		generateTerritoryResourceValues();
 	}
 
 	private void generateShape(){
@@ -267,6 +269,85 @@ public class MapShape {
 		bestTerritory.getTiles().add(tile);
 		tile.setTerritory(bestTerritory);
 
+	}
+	
+	
+	private void generateTerritoryResourceValues(){
+	
+		// This method will be used to randomly generate the resource values for each territory
+		
+		for (Territory terr: territories){
+			int f = 0, w = 0, m = 0;
+			for (Tile t: terr.getTiles()){
+				f += getValue('f', t);
+				w += getValue('w', t);
+				m += getValue('m', t);
+			}
+			terr.setFoodVal(f);
+			terr.setMineralVal(m);
+			terr.setWoodVal(w);
+		}
+	}
+	
+	private int getValue(char resource, Tile t){
+		final int swampF = 4, swampW = 3, swampM = 2, desertF = 2, desertW = 2, desertM = 5,
+				tundraF = 3, tundraW = 4, tundraM = 2, forestF = 4, forestW = 10, forestM = 2,
+				plainsF = 10, plainsW = 3, plainsM = 2,
+				mountainF = 2, mountainW = 3, mountainM = 10;
+		// These values will be used as randomization maximums for tile resources.  
+		int value = 0;
+		
+		switch (t.getType()){
+		
+		case(Tile.DESERT_ID):
+			if (resource == 'f')
+				return ((int)(Math.random() * desertF + 1));
+			else if (resource == 'w')
+				return ((int)(Math.random() * desertW + 1));
+			else
+				return ((int)(Math.random() * desertM + 1));
+		
+		case (Tile.FOREST_ID):
+			if (resource == 'f')
+				return ((int)(Math.random() * forestF + 1));
+			else if (resource == 'w')
+				return ((int)(Math.random() * forestW + 1));
+			else
+				return ((int)(Math.random() * forestM + 1));
+		case (Tile.SWAMP_ID):
+			if (resource == 'f')
+				return ((int)(Math.random() * swampF + 1));
+			else if (resource == 'w')
+				return ((int)(Math.random() * swampW + 1));
+			else
+				return ((int)(Math.random() * swampM + 1));
+		case (Tile.PLAINS_ID):
+			if (resource == 'f')
+				return ((int)(Math.random() * plainsF + 1));
+			else if (resource == 'w')
+				return ((int)(Math.random() * plainsW + 1));
+			else
+				return ((int)(Math.random() * plainsM + 1));
+		case (Tile.MOUNTAIN_ID):
+			if (resource == 'f')
+				return ((int)(Math.random() * mountainF + 1));
+			else if (resource == 'w')
+				return ((int)(Math.random() * mountainW + 1));
+			else
+				return ((int)(Math.random() * mountainM + 1));
+		case (Tile.TUNDRA_ID):
+			if (resource == 'f')
+				return ((int)(Math.random() * tundraF + 1));
+			else if (resource == 'w')
+				return ((int)(Math.random() * tundraW + 1));
+			else
+				return ((int)(Math.random() * tundraM + 1));
+			
+			
+		
+		}
+		
+		return value;
 	}
 
 	public static ArrayList<Tile> getTileNeighbors(Tile t, Tile[][] tiles, int size){

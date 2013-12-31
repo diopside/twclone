@@ -70,7 +70,18 @@ public class Territory {
 
 
 	}
+	
+	public void setWoodVal(int w){
+		woodVal = w;
+	}
+	
+	public void setMineralVal(int m){
+		mineralVal = m;
+	}
 
+	public void setFoodVal(int f){
+		foodVal = f;
+	}
 	public void createMaximumBoundaries(){
 		int maxX = 0, minX = Integer.MAX_VALUE, maxY = 0, minY = Integer.MAX_VALUE;
 		Coordinates[] coords = new Coordinates[2];
@@ -150,6 +161,10 @@ public class Territory {
 		
 	}
 
+	
+	public String getResInfo(){
+		return "Food: " + foodVal + "    Wood: " + woodVal + "    Minerals: " + mineralVal;
+	}
 
 
 
