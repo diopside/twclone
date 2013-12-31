@@ -269,7 +269,7 @@ public class MapShape {
 
 	}
 
-	public ArrayList<Tile> getTileNeighbors(Tile t){
+	public static ArrayList<Tile> getTileNeighbors(Tile t, Tile[][] tiles, int size){
 		ArrayList<Tile> neighbors = new ArrayList<>();
 
 		int xStartIndex = t.getX() - 1 < 0 ? 0 : -1;
@@ -282,7 +282,7 @@ public class MapShape {
 				if ( x == 0 && y == 0)
 					continue;
 				else
-					neighbors.add(tiles[x][y]);
+					neighbors.add(tiles[x + t.getX()][y + t.getY()]);
 
 
 

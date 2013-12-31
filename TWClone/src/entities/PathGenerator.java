@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import org.newdawn.slick.Color;
 
 import entities.units.Army;
+import entities.world.MapShape;
 import entities.world.Tile;
 
 public class PathGenerator {
@@ -30,8 +31,11 @@ public class PathGenerator {
 
 		// currently if the destination is occupied it just won't generate a path
 		// eventually change this to the adjacent tile with the lowest f value
-		if (dest.occupied())
-			return path;
+		if (dest.occupied()){
+			dest = getNewDestinationTile(start, dest);
+			if (dest == null)
+				return path;
+		}
 
 		//initially add the starting tile to generate adjacent nodes
 		open.add(new Node(start, 0, determineH(start, dest), null));
@@ -51,6 +55,26 @@ public class PathGenerator {
 
 	}
 
+	private static Tile getNewDestinationTile(Tile start, Tile oldDest){
+		//This method will get the tile with the lowest manhattan distance from the start tile and return it so long as it isn't occupied
+		
+		ArrayList<Tile> neighbors = MapShape.getTileNeighbors(oldDest, TILES, SIZE);
+		int h = Integer.MAX_VALUE;
+		Tile bestTile = neighbors.get(0);
+		
+		for (Tile t: neighbors){
+			if (h  > determineH(start, t) && !t.occupied()){
+				h = determineH(start, t);
+				bestTile = t;
+				
+			}
+		}
+		
+		// in the event there is no good tile and the starting tile is occupied, return null
+		bestTile = bestTile.occupied() ? null : bestTile;
+		return bestTile;
+	}
+
 	private static ArrayList<Tile> reversePath(ArrayList<Tile> path){
 		/*
 		 * Currently the path is returned in reverse order
@@ -59,10 +83,10 @@ public class PathGenerator {
 		ArrayList<Tile> newPath = new ArrayList<>();
 		for (int i = 0; i < path.size(); i ++)
 			newPath.add(path.get(path.size() - 1 - i));
-		
-		                                    
+
+
 		return newPath;
-		
+
 	}
 	private static void traversePath(Node node, ArrayList<Tile> path){
 		/*
@@ -274,7 +298,7 @@ public class PathGenerator {
 
 
 	public static Color getTurnColor(int turn){
-		
+
 		/*
 		 * This method will get the appropriate color to render a unit's path based off of how many turns it would take 
 		 * the unit to reach the node in the path
@@ -291,7 +315,7 @@ public class PathGenerator {
 		}
 
 	}
-	
+
 
 
 }

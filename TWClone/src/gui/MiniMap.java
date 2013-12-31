@@ -50,8 +50,6 @@ public class MiniMap {
 				case 5:
 					color = mountains; break;
 				}
-				//Line line = new Line(i * rSize + START_X, j * rSize + START_Y, (i + 1) * rSize + START_X, (j+1)*rSize + START_Y);
-				//shapes.add(new ColoredShape(line, color));
 				Rectangle rect = new Rectangle (i * rSize + START_X, j * rSize + START_Y, rSize, rSize);
 				shapes.add(new ColoredShape(rect, color));
 				
@@ -62,7 +60,6 @@ public class MiniMap {
 
 	public void render(Graphics g, int xOffset, int yOffset){
 		float rSize = (float) (SIZE / arrLength);
-		//g.setLineWidth(rSize);
 		for (ColoredShape cs: shapes){
 			g.setColor(cs.getColor());
 			g.draw(cs.getShape());
