@@ -2,7 +2,7 @@ package gui;
 
 import org.newdawn.slick.Graphics;
 
-import entities.units.Building;
+import entities.units.buildings.Building;
 import entities.world.Territory;
 
 public class BuildingWindow extends Window {

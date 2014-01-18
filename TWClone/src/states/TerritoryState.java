@@ -6,6 +6,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
@@ -15,13 +16,14 @@ import entities.world.World;
 
 public class TerritoryState extends BasicGameState {
 
-	private final int SUB_WINDOW_MARGIN = 4;
+	private final int SUB_WINDOW_X = 6, SUB_WINDOW_Y = 66, INFO_ID = 0, LEDGER_ID = 1, BUILDINGS_ID = 2, UNITS_ID = 3, BUTTON_SPACING = 293, BUTTON_HEIGHT = 64;
 
 	private final int ID;
 	private Territory territory;
 	private World world;
 	private Image window;
-	private int tX, tY; // the top left tile index used for rendering the top left baseview
+	private int tX, tY, selectedButton; // the top left tile index used for rendering the top left baseview
+	
 
 
 	public TerritoryState(int id){
@@ -34,6 +36,7 @@ public class TerritoryState extends BasicGameState {
 
 		initImages();
 		world = ((WorldState) game.getState(Game.WORLD_STATE_ID)).getWorld();
+		selectedButton = 0;
 
 	}
 
@@ -50,12 +53,15 @@ public class TerritoryState extends BasicGameState {
 			Graphics g) throws SlickException {
 
 		window.draw();
-		g.setColor(Color.black);   g.setBackground(Color.white);
-		g.setFont(Game.MORRIS_ROMAN_24);
-		g.drawString(territory.getName(), Game.WIDTH/2, 50);
 
-		
+		g.setColor(Color.red);
+		g.setLineWidth(5f);
+		int rWidth = BUTTON_SPACING + 5;
+		if (selectedButton == 3)
+			rWidth += 20;
+		g.draw(new Rectangle(selectedButton * BUTTON_SPACING, 0, rWidth, 65));
 		renderSubWindow();
+		
 		
 
 	}
@@ -65,11 +71,11 @@ public class TerritoryState extends BasicGameState {
 		for (int i = 0; i < 6; i ++)
 			for (int j = 0; j < 6; j ++){
 				// Get the tile, and then draw a tile corresponding to its type on the sub window
-				Tile.tiles[tiles[tX + i][tY + j].getType()].draw(SUB_WINDOW_MARGIN + i * Tile.SIZE, SUB_WINDOW_MARGIN + j * Tile.SIZE);
+				Tile.tiles[tiles[tX + i][tY + j].getType()].draw(SUB_WINDOW_X + i * Tile.SIZE, SUB_WINDOW_Y + j * Tile.SIZE);
 				
 				// test if the tile in question is where the base is located, draw the base on top of the tile
 				if (tiles[tX + i][tY + j].getY() == territory.getTiles().get(0).getY() && tiles[tX + i][tY + j].getX() == territory.getTiles().get(0).getX())
-					territory.getIcon().getImage().draw(SUB_WINDOW_MARGIN + i * Tile.SIZE, SUB_WINDOW_MARGIN + j * Tile.SIZE);
+					territory.getIcon().getImage().draw(SUB_WINDOW_X + i * Tile.SIZE, SUB_WINDOW_Y + j * Tile.SIZE);
 			}
 	}
 
@@ -85,6 +91,11 @@ public class TerritoryState extends BasicGameState {
 		if (input.isKeyPressed(input.KEY_ESCAPE))
 			game.enterState(Game.WORLD_STATE_ID);
 
+		if (input.isMousePressed(input.MOUSE_LEFT_BUTTON)){
+			if (mouseY < 65 && mouseY > 0){
+				selectedButton = (15 + mouseX) / BUTTON_SPACING;
+			}
+		}
 
 	}
 

@@ -13,7 +13,8 @@ import entities.Coordinates;
 import entities.Faction;
 import entities.Icon;
 import entities.units.Army;
-import entities.units.Building;
+import entities.units.Unit;
+import entities.units.buildings.Building;
 import gui.OffsetLine;
 
 public class Territory {
@@ -28,6 +29,8 @@ public class Territory {
 	private ArrayList<OffsetLine> border;
 	private ArrayList<Tile> tiles;
 	private ArrayList<Building> buildings;
+	private ArrayList<Building> buildingConstruction;
+	private ArrayList<Unit> unitConstruction;
 	private Rectangle maximumBoundaries;
 	private Army garrison;
 	private int foodVal;
@@ -129,13 +132,6 @@ public class Territory {
 		return baseIcon.getShape(xOffset, yOffset).contains(mouseX, mouseY);
 	}
 
-	public void generateVals(){
-		
-		
-		
-		
-		
-	}
 
 	public int getType(){
 		// The type of territory it is, eg Desert
@@ -163,7 +159,11 @@ public class Territory {
 
 	
 	public String getResInfo(){
-		return "Food: " + foodVal + "    Wood: " + woodVal + "    Minerals: " + mineralVal;
+		float numTiles = tiles.size();
+		String s = new String( "Food: " + foodVal + "    Wood: " + woodVal + "    Minerals: " + mineralVal);
+		s += "\nFood Density: " + foodVal/numTiles + "      Wood Density: " + woodVal/numTiles + "    Mineral Density: " + mineralVal/numTiles;
+		
+		return s;
 	}
 
 
