@@ -37,6 +37,9 @@ public class Node {
 		return g;
 	}
 	
+	public boolean equals(Node other){
+		return other.getTile().equals(t);
+	}
 	
 	
 	

@@ -14,7 +14,8 @@ public class PathGenerator {
 
 	private static Tile[][] TILES;
 	private static int SIZE;
-	private static final int MAX_DISTANCE = 100; // The greatest distance away from the current unit allowed to generate a path from
+	private static final int MAX_DISTANCE = 100 // The greatest distance away from the current unit allowed to generate a path from
+			, MAX_SEARCHED = 500;// the maximum number of nodes to traverse
 
 	// These colors will be used in painting unit paths, indicating how long it will take the unit to get somewhere
 	public static final Color TURN_1_COLOR = new Color(0, 255, 0), TURN_2_COLOR = new Color(255, 216, 0), 
@@ -42,13 +43,13 @@ public class PathGenerator {
 
 		// loop will ideally end when the dest is found, otherwise the loop ends when there aren't more nodes to examine, resulting in returning an empty stack
 		while (open.size() > 0){
-			Node nextNode = getBestNode(open);
-			if (nextNode.getTile() == dest){
+			Node nextNode = open.get(0);
+			if (nextNode.getTile() == dest || closed.size() >= MAX_SEARCHED){
 				traversePath(nextNode, path);
 				path = reversePath(path);
 				break;
 			}
-			addNeighbors(getBestNode(open), open, closed, start, dest);
+			addNeighbors(open.get(0), open, closed, start, dest);
 		}
 		System.out.println(System.currentTimeMillis() - s);
 		return path;
@@ -118,7 +119,7 @@ public class PathGenerator {
 					if (current.getTile().getX() + i >= 0 && current.getTile().getX() + i < SIZE && current.getTile().getY() + j >= 0 && current.getTile().getY() + j < SIZE){
 						Tile next = TILES[current.getTile().getX() + i][current.getTile().getY() + j];
 						if (isValid(next, closed)){
-							if (open.contains(next))
+							if (open.contains(new Node(next, 0, 0, null)))
 								; // recompute f here to see if this is a better route
 							else
 								open.add(new Node(next, determineG(next, current, dest), determineH(next, dest), current));
@@ -129,9 +130,33 @@ public class PathGenerator {
 
 		open.remove(current);
 		closed.add(current);
+		insertionSort(open);
 
 	}
+	
+	private static void insertionSort(ArrayList<Node> open){
+		/*
+		 * This is a basic insertion sort with the intention of speeding up the algorithm overall
+		 * insertion is used because the list will always be nearly sorted after the neighbors are added with each iteration
+		 */
+		int elementsSorted = 1;
+		int index = 1;
+		
+		while (elementsSorted < open.size()){
+			Node temp = open.get(elementsSorted);
+			for (index = elementsSorted; index > 0; index --){
+				if (temp.getF() < open.get(index - 1).getF())
+					open.set(index, open.get(index - 1));
+				else
+					break;
+			}
+			open.set(index, temp);
+			elementsSorted ++;
+		}
+	}
 
+	
+	/*
 	private static Node getBestNode(ArrayList<Node> nodes){
 		// This list will return the Node in the list with the lowest f
 		Node best = nodes.get(0);
@@ -140,12 +165,13 @@ public class PathGenerator {
 				best = n;
 
 		return best;
-	}
+	}*/
 
 	private static boolean isValid(Tile t, ArrayList<Node> closed){
+		Node temp = new Node(t, 0, 0, null);
 		if (t.occupied())
 			return false;
-		else if (closed.contains(t))
+		else if (closed.contains(temp))
 			return false;
 
 		return true;

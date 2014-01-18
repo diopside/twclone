@@ -1,5 +1,6 @@
 package entities.world;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import entities.Entity;
@@ -29,6 +30,8 @@ public class Tile implements ToolTippable {
 		this.y = y;
 		this.id = id;
 		territory = null;
+		
+		
 	}
 
 
@@ -95,6 +98,9 @@ public class Tile implements ToolTippable {
 		return occupyingEntity;
 	}
 	
+	public boolean equals(Tile other){
+		return (this.x == other.getX() && this.y == other.getY());
+	}
 	
 
 	public static void initTiles(){
@@ -156,6 +162,8 @@ public class Tile implements ToolTippable {
 		tt.setActive(!tt.isActive());
 
 	}
+
+	
 
 
 }

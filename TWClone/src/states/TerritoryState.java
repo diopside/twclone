@@ -81,6 +81,7 @@ public class TerritoryState extends BasicGameState {
 		int mouseX = input.getMouseX();
 		int mouseY = input.getMouseY();
 
+		// temporarily used to indicate that the player would like to return to the main game screen
 		if (input.isKeyPressed(input.KEY_ESCAPE))
 			game.enterState(Game.WORLD_STATE_ID);
 
