@@ -105,6 +105,7 @@ public class Game extends StateBasedGame{
 		try {
 			AppGameContainer app = new AppGameContainer(new Game("TWClone"), WIDTH, HEIGHT, false);
 			app.setTargetFrameRate(200);
+		
 			app.start();
 		} catch (SlickException exception) {
 			exception.printStackTrace();

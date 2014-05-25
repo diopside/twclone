@@ -15,7 +15,7 @@ public class PathGenerator {
 	private static Tile[][] TILES;
 	private static int SIZE;
 	private static final int MAX_DISTANCE = 100 // The greatest distance away from the current unit allowed to generate a path from
-			, MAX_SEARCHED = 500;// the maximum number of nodes to traverse
+			, MAX_SEARCHED = 1500;// the maximum number of nodes to traverse
 
 	// These colors will be used in painting unit paths, indicating how long it will take the unit to get somewhere
 	public static final Color TURN_1_COLOR = new Color(0, 255, 0), TURN_2_COLOR = new Color(255, 216, 0), 
@@ -214,8 +214,27 @@ public class PathGenerator {
 
 		Tile start, dest;
 
-
-		for (int i = 0; i < 100; i ++){
+		class FindTuple{
+			
+			int x1, y1, x2, y2;
+			long time;
+			
+			public FindTuple(int a, int b, int c, int d, long e){
+				x1 = a; y1 = b;
+				x2 = c; y2 = d;
+				time = e;
+			}
+			
+			public String toString(){
+				return new String(x1 + ", " + y1 + "    " + x2 + ", " + y2 + "   Duration: " + time);
+			}
+			
+		}
+		
+		
+		ArrayList<FindTuple> tuples = new ArrayList<>();
+		
+		for (int i = 0; i < 10; i ++){
 			int rnd1 = (int) (Math.random() * SIZE);
 			int rnd2 = (int) (Math.random() * SIZE);
 			int rnd3 = (int) (Math.random() * SIZE);
@@ -224,6 +243,8 @@ public class PathGenerator {
 			long startTime = System.nanoTime();
 			PathGenerator.generateAStarPath(new Coordinates(rnd1, rnd2), TILES[rnd3][rnd4]);
 			long duration = System.nanoTime() - startTime;
+			
+			tuples.add(new FindTuple(rnd1, rnd2, rnd3, rnd4, duration/1000));
 
 			averageFind += duration;
 			slowestFind = slowestFind > duration ? slowestFind : duration;
@@ -231,6 +252,9 @@ public class PathGenerator {
 
 		}
 
+		for (FindTuple tuple: tuples){
+			System.out.println(tuple.toString());
+		}
 		System.out.println("Slowest Path Time: " + slowestFind);
 		System.out.println("Quickest Path Time: " + quickestFind);
 		System.out.println("Average Path Time: " + averageFind / 100);
@@ -274,6 +298,8 @@ public class PathGenerator {
 		}
 
 	}
+
+	
 
 
 

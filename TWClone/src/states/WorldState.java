@@ -183,6 +183,9 @@ public class WorldState extends BasicGameState {
 		//****************************************
 		if (input.isMousePressed(input.MOUSE_LEFT_BUTTON)){
 			handleLeftClick(input, game);
+			Tile mouseOverTile = determineMouseTileLocation();
+			if (mouseOverTile != null)
+				System.out.println(determineMouseTileLocation().getX() + ", " + determineMouseTileLocation().getY());
 		}  // end left button block
 
 		if (input.isMousePressed(input.MOUSE_RIGHT_BUTTON)){
@@ -234,7 +237,7 @@ public class WorldState extends BasicGameState {
 		if (input.isKeyPressed(input.KEY_D)){
 			settings.setDisplayAllPaths(false);
 			
-			//PathGenerator.testPathFinder();
+			PathGenerator.testPathFinder();
 		}
 
 
